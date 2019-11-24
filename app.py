@@ -121,7 +121,7 @@ def message():
       sent_from = gmail_user
       to = [result['email']]
       subject = 'Notifica ricezione Carta Di Accollo da ' + card['sender']
-      body = 'Gentile utente,\n\nComplimenti hai ricevuto un Carta Di Accollo da' + card['sender'] +'!\n\n' \
+      body = 'Gentile utente,\n\nComplimenti hai ricevuto un Carta Di Accollo da ' + card['sender'] +'!\n\n' \
       'La puoi trovare allegata con la presente e-mail o puoi visualizzarla al seguente link:\n\n' + card_url + '\n\n\n\nGrazie,\nAccolli Operation Team'
       email_text = """\
 From: %s
