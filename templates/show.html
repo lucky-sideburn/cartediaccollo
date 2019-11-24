@@ -41,6 +41,7 @@
                       <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Non ancora completato</a>
                       <a href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Ricarica carta</a>
                        <a href="https://accollicertificati.org/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Download carta</a>
+                        <a href="https://accollicertificati.org" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Home Page</a>        
                     </div>
                     <small class="text-muted"></small>
                   </div>
