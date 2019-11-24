@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Cover Template for Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/cover/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+  </head>
+  <style>
+    .row-margin-05 { margin-top: 0.5em; }
+    .row-margin-10 { margin-top: 1.0em; }
+    .row-margin-20 { margin-top: 2.0em; }
+    .row-margin-30 { margin-top: 3.0em; }
+  </style>
+
+  <body>
+<main role="main">
+  <div class="album py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card mb-4 shadow-sm">
+            <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
+            <div class="card-body">
+              <p class="card-text {{text}}">{{card_status_desc}}</p>
+              <div class="container">   
+                <div class="row row-margin-05">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}" class="btn btn-sm btn-outline-secondary" role="button">Completato</a>
+                      <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Non ancora completato</a>
+                      <a href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Ricarica carta</a>
+                       <a href="http://accollicertificati.org:5000/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Download carta</a>
+                    </div>
+                    <small class="text-muted"></small>
+                  </div>
+                </div>   
+                <div class="row row-margin-05">
+                  <form action="http://localhost:5000/message?id={{request.args.get('id')}}&token={{request.args.get('token')}}" method="POST" class="form-inline">
+                    <div class="form-group">
+                      <div class="input-group mb-2 mr-sm-2">
+                        <input type="email" name="email" class="form-control" id="inlineFormInputGroupUsername2" placeholder="email destinatario">
+                      </div>
+                     <button type="submit" class="btn btn-primary mb-2">Invia tramite e-mail</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+<!--
+          <form action="http://localhost:5000/message" method="POST">
+            <div class="form-group">
+              <input class="form-control form-control-lg" type="text" placeholder="scrivi qui un aggiornamento">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Invia</button>
+          </form>
+-->
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="static/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="static/assets/js/vendor/popper.min.js"></script>
+    <script src="static/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
+
+        

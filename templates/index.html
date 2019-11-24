@@ -1,0 +1,72 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Cover Template for Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/cover/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/cover.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading">Accolli Certification Authority</h1>
+        <p class="lead">Genera la carta di accollo per chi ti si sta accollando!</p>
+        
+        {% if alert %}
+        <div class="alert alert-warning" role="alert">
+          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri e massimo di 60 caratteri
+        </div>
+        {% endif %}
+        <form action="http://localhost:5000/cartadiaccollo" method="POST">
+          <div class="form-group">
+            <label for="task1">Attività richiesta</label>
+            <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
+          </div>
+          <div class="form-group">
+            <label for="recipient1">Chi si sta accollando</label>
+            <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
+          </div>
+          <div class="form-group">
+            <label for="sender1">Il tuo nome</label>
+            <input name="sender" type="text" class="form-control" id="sender1" placeholder="Foo Bar">
+          </div>
+          <button type="submit" class="btn btn-primary">Crea</button>
+        </form>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>A <a href="https://twitter.com/luckysideburn">@luckysideburn</a> production.</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="static/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="static/assets/js/vendor/popper.min.js"></script>
+    <script src="static/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
