@@ -32,12 +32,12 @@ def read_card_mongo(uuid,token):
   else:
     return card
 
-def write_card_mongo(card_id,token,card_url):
+def write_card_mongo(card_id,token,card_url,sender):
   client = MongoClient()
   client = MongoClient('localhost', 27017)
   db = client['cartediaccollo']
   collection = db['carte']
-  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url}
+  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender}
   post_id = collection.insert_one(post).inserted_id
   print post_id
 
@@ -112,6 +112,7 @@ def message():
   result = request.form
   gmail_user = 'accollicertificati@gmail.com'
   gmail_password = 'accollo.123!!'
+  card = read_card_mongo(request.args.get('id'),request.args.get('token'))
   print "Sending email to " + result['email']
   try:
       server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -119,8 +120,8 @@ def message():
       server.login(gmail_user, gmail_password)
       sent_from = gmail_user
       to = [result['email']]
-      subject = 'Notifica ricezione Carta Di Accollo'
-      body = 'Gentile utente,\n\nComplimenti hai ricevuto un Carta Di Accollo!\n\n' \
+      subject = 'Notifica ricezione Carta Di Accollo da ' + card['sender']
+      body = 'Gentile utente,\n\nComplimenti hai ricevuto un Carta Di Accollo da' + card['sender'] +'!\n\n' \
       'La puoi trovare allegata con la presente e-mail o puoi visualizzarla al seguente link:\n\n' + card_url + '\n\n\n\nGrazie,\nAccolli Operation Team'
       email_text = """\
 From: %s
@@ -181,7 +182,7 @@ def cartadiaccollo():
       card_id = create_card_img(result['recipient'],result['task'],result['sender'],token)
       card_url = "https://accollicertificati.org/show?id=" + card_id + "&token=" + token 
       print card_url
-      write_card_mongo(card_id,token,card_url)
+      write_card_mongo(card_id,token,card_url,result['sender'])
       #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
       card_url = "https://accollicertificati.org/show?id=" + card_id + "&token=" + token
       return redirect(card_url, code=302)
