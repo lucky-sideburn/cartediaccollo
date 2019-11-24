@@ -59,7 +59,7 @@ def create_card_img(recipient,task,sender,token):
   font = ImageFont.truetype("Inconsolata-Regular.ttf",28)
   card_text = "Gentile " + recipient + ",\n\n\nLa presente Carta Di Accollo creata in data " + time.strftime("%d/%m/%Y") + \
   "\ncertifica che ho preso in considerazione la tua richiesta.\n\n" \
-  "Io sottoscritto, " + sender + ", mi impegno ad occuparmi di " + task + ".\n\n" \
+  "Io sottoscritto, " + sender + ", mi impegno ad occuparmi di:\n " + task + ".\n\n" \
   "Per favore non chiedermi troppo spesso feedback sullo stato\ndi completamento! Ci sto lavorando!\n\n"
   d.text((100,100), card_text, fill=(255,255,255),font=font)
   
