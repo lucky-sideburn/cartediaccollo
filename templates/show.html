@@ -40,13 +40,13 @@
                       <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}" class="btn btn-sm btn-outline-secondary" role="button">Completato</a>
                       <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Non ancora completato</a>
                       <a href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Ricarica carta</a>
-                       <a href="http://accollicertificati.org:5000/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Download carta</a>
+                       <a href="https://accollicertificati.org/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo" class="btn btn-sm btn-outline-secondary" class="btn btn-sm btn-outline-secondary" role="button">Download carta</a>
                     </div>
                     <small class="text-muted"></small>
                   </div>
                 </div>   
                 <div class="row row-margin-05">
-                  <form action="http://localhost:5000/message?id={{request.args.get('id')}}&token={{request.args.get('token')}}" method="POST" class="form-inline">
+                  <form action="https://accollicertificati.org/message?id={{request.args.get('id')}}&token={{request.args.get('token')}}" method="POST" class="form-inline">
                     <div class="form-group">
                       <div class="input-group mb-2 mr-sm-2">
                         <input type="email" name="email" class="form-control" id="inlineFormInputGroupUsername2" placeholder="email destinatario">
@@ -58,7 +58,7 @@
             </div>
           </div>
 <!--
-          <form action="http://localhost:5000/message" method="POST">
+          <form action="https://accollicertificati.org/message" method="POST">
             <div class="form-group">
               <input class="form-control form-control-lg" type="text" placeholder="scrivi qui un aggiornamento">
             </div>
