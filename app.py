@@ -66,7 +66,7 @@ def create_card_img(recipient,task,sender,token):
   font = ImageFont.truetype("Inconsolata-Regular.ttf",24)
   details = "ID: " + card_id + "\n" \
   "Token: " + token + "\n" \
-  "Scansiona il QR code per accedere alla della richiesta" \
+  "Scansiona il QR code per accedere alla richiesta" \
   "\n\n\n\n" + "Crea anche tu accolli certificati su https://accollicertificati.org" 
   d.text((100,500), details, fill=(255,255,255),font=font)
   
@@ -152,7 +152,7 @@ def show():
     if card:
       print("Card Image URL: " + card_img_url)
       if card['status'] == 'open':
-        card_status_desc = 'Questo accollo devo ancora essere completato!'
+        card_status_desc = 'Questo accollo deve ancora essere completato!'
         text = 'text-primary'
       elif card['status'] == 'progress':
         card_status_desc = 'Ci sto lavorando abbi fede!'
