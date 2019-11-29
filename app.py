@@ -67,7 +67,7 @@ def create_card_img(recipient,task,sender,token):
   details = "ID: " + card_id + "\n" \
   "Token: " + token + "\n" \
   "Scansiona il QR code per accedere alla richiesta" \
-  "\n\n\n\n" + "Crea anche tu accolli certificati su https://accollicertificati.org" 
+  "\n\n\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
   d.text((100,500), details, fill=(255,255,255),font=font)
   
   img.save('static/cards/' + card_id + '-text.png')
@@ -79,7 +79,7 @@ def create_card_img(recipient,task,sender,token):
       border=1,
   )
 
-  qr_data = "https://accollicertificati.org/show?id=" + card_id + "&token=" + token  
+  qr_data = "https://accolli.it/show?id=" + card_id + "&token=" + token  
   print qr_data
   qr.add_data(qr_data)
   qr.make(fit=True)
@@ -108,7 +108,7 @@ def main():
 
 @app.route("/message",methods = ['POST', 'GET'])
 def message():
-  card_url = "https://accollicertificati.org/show?id=" + request.args.get('id') + "&token=" + request.args.get('token')
+  card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token')
   result = request.form
   gmail_user = 'accollicertificati@gmail.com'
   gmail_password = 'accollo.123!!'
@@ -139,7 +139,7 @@ Subject: %s
 
 @app.route("/changestatus")
 def changestatus():
-  card_url = "https://accollicertificati.org/show?id=" + request.args.get('id') + "&token=" + request.args.get('token') 
+  card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token') 
   change_card_status(request.args.get('id'),request.args.get('status'))
   return redirect(card_url, code=302)
 
@@ -148,7 +148,7 @@ def show():
     card_id = request.args.get('id')
     token = request.args.get('token')
     card = read_card_mongo(card_id,token)
-    card_img_url = "https://accollicertificati.org/static/cards/" + card_id + ".png" 
+    card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
     if card:
       print("Card Image URL: " + card_img_url)
       if card['status'] == 'open':
@@ -180,13 +180,14 @@ def cartadiaccollo():
 
       token = randomString(20)
       card_id = create_card_img(result['recipient'],result['task'],result['sender'],token)
-      card_url = "https://accollicertificati.org/show?id=" + card_id + "&token=" + token 
+      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
       print card_url
       write_card_mongo(card_id,token,card_url,result['sender'])
       #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
-      card_url = "https://accollicertificati.org/show?id=" + card_id + "&token=" + token
+      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
       return redirect(card_url, code=302)
-
+   else:
+      return redirect('https://accolli.it',code=302) 
 
 if __name__ == "__main__":
     app.run()
