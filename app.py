@@ -104,14 +104,18 @@ def create_card_img(recipient,task,sender,token):
 
 @app.route("/")
 def main():
-    return render_template('index.html')
+    return render_template('index.html', accolloform=False, slideshow=True)
+
+@app.route("/create")
+def create():
+    return render_template('index.html', accolloform=True, slideshow=False)
 
 @app.route("/message",methods = ['POST', 'GET'])
 def message():
   card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token')
   result = request.form
-  gmail_user = 'accollicertificati@gmail.com'
-  gmail_password = 'accollo.123!!'
+  gmail_user = os.environ['ACCOLLI_MAIL_USER']
+  gmail_password = os.environ['ACCOLLI_MAIL_PASSWORD']
   card = read_card_mongo(request.args.get('id'),request.args.get('token'))
   print "Sending email to " + result['email']
   try:
@@ -145,49 +149,49 @@ def changestatus():
 
 @app.route("/show")
 def show():
-    card_id = request.args.get('id')
-    token = request.args.get('token')
-    card = read_card_mongo(card_id,token)
-    card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
-    if card:
-      print("Card Image URL: " + card_img_url)
-      if card['status'] == 'open':
-        card_status_desc = 'Questo accollo deve ancora essere completato!'
-        text = 'text-primary'
-      elif card['status'] == 'progress':
-        card_status_desc = 'Ci sto lavorando abbi fede!'
-        text = 'text-danger'
-      elif card['status'] == 'done':
-        card_status_desc = 'Accollo completato!'
-        text = 'text-success'
-      else:
-        card_stauts_desc = 'uhm... stato accollo indefinito.'
+  card_id = request.args.get('id')
+  token = request.args.get('token')
+  card = read_card_mongo(card_id,token)
+  card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
+  if card:
+    print("Card Image URL: " + card_img_url)
+    if card['status'] == 'open':
+      card_status_desc = 'Questo accollo deve ancora essere completato!'
+      text = 'text-primary'
+    elif card['status'] == 'progress':
+      card_status_desc = 'Ci sto lavorando abbi fede!'
+      text = 'text-danger'
+    elif card['status'] == 'done':
+      card_status_desc = 'Accollo completato!'
+      text = 'text-success'
+    else:
+      card_stauts_desc = 'uhm... stato accollo indefinito.'
 
-      return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text)
-    elif card == False:
-      return render_template('access_denied.html')
+    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text)
+  elif card == False:
+    return render_template('access_denied.html')
 
 @app.route('/cartadiaccollo',methods = ['POST', 'GET'])
 def cartadiaccollo():
-   if request.method == 'POST':
-      result = request.form
+  if request.method == 'POST':
+    result = request.form
 
-      inputs = ["recipient","sender","task"]
+    inputs = ["recipient","sender","task"]
 
-      for _input in inputs:
-        if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
-          return render_template('index.html', alert=True)
+    for _input in inputs:
+      if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
+        return render_template('index.html', alert=True, accolloform=True, slideshow=False)
 
-      token = randomString(20)
-      card_id = create_card_img(result['recipient'],result['task'],result['sender'],token)
-      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      print card_url
-      write_card_mongo(card_id,token,card_url,result['sender'])
-      #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
-      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
-      return redirect(card_url, code=302)
-   else:
-      return redirect('https://accolli.it',code=302) 
+    token = randomString(20)
+    card_id = create_card_img(result['recipient'],result['task'],result['sender'],token)
+    card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
+    print card_url
+    write_card_mongo(card_id,token,card_url,result['sender'])
+    #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
+    card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
+    return redirect(card_url, code=302)
+  else:
+    return redirect('https://accolli.it',code=302) 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
