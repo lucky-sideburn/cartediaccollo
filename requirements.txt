@@ -73,7 +73,7 @@ msgpack==0.6.2
 munch==2.3.2
 netaddr==0.7.19
 netifaces==0.10.9
-nltk==3.4.4
+nltk==3.4.5
 nose==1.3.7
 numpy==1.16.4
 openstacksdk==0.36.0
