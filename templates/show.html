@@ -21,6 +21,12 @@
     .row-margin-10 { margin-top: 1.0em; }
     .row-margin-20 { margin-top: 2.0em; }
     .row-margin-30 { margin-top: 3.0em; }
+
+    body {
+      height: 100%;
+      background-color: #333;
+    }
+
   </style>
 
   <body>
@@ -32,7 +38,7 @@
           <div class="card mb-4 shadow-sm">
             <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
             <div class="card-body">
-              <p class="card-text {{text}}">{{card_status_desc}}</p>
+              <p class="card-text">Stato: <font class="card-text {{text}}">{{card_status_desc}}</font></p>
               <div class="container">   
                 <div class="row row-margin-05">
                   <div class="d-flex justify-content-between align-items-center">
@@ -41,7 +47,10 @@
                       <a href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}" class="btn btn-sm btn-outline-secondary" role="button">Da fare</a>
                       <a href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}" class="btn btn-sm btn-outline-secondary" role="button">Refresh</a>
                        <a href="https://accolli.it/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo" class="btn btn-sm btn-outline-secondary" role="button">Download</a>
-                        <a href="https://accolli.it" class="btn btn-sm btn-outline-secondary" role="button">Home Page</a>        
+                       <a href="https://accolli.it" class="btn btn-sm btn-outline-secondary" role="button">Home Page</a>
+                       {% if request.args.get('dashboard_token') %}
+                       <a href="https://accolli.it/dashboard_accolli?token={{request.args.get('dashboard_token')}}" class="btn btn-sm btn-outline-secondary" role="button">Torna indietro</a>     
+                       {% endif %}          
                     </div>
                     <small class="text-muted"></small>
                   </div>

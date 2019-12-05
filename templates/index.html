@@ -30,18 +30,41 @@
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
       <header class="masthead mb-auto">
         <div class="inner">
-
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="https://accolli.it">Home</a>
+            <a class="nav-link" href="/dashboard_accolli">Accolliboard</a>
+          </nav>
         </div>
       </header>
-
       <main role="main" class="inner cover">
         <h1 class="cover-heading">Accolli.it</h1>
-        <p class="lead">Genera la carta di accollo per chi ti si sta accollando!</p>
-        
+        {% if accolloformdashboard %}
+        <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+        {% else %}
+        <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
+        </p>
+        <p class="lead">
+        Se invece hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
+        </p>
+        {% endif %}
         {% if alert %}
         <div class="alert alert-warning" role="alert">
           Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri e massimo di 60 caratteri
         </div>
+        {% endif %}
+        {% if accolloformdashboard %}
+        <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['uuid']}}&dashboard_name={{dashboard['name']}}" method="POST">
+          <div class="form-group">
+            <label for="task1">Attività richiesta</label>
+            <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
+          </div>
+          <div class="form-group">
+            <label for="seder">Il tuo nome</label>
+            <input name="sender" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
+          </div>
+          <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
+          <button type="submit" class="btn btn-secondary">Crea</button>
+        </form>
         {% endif %}
         {% if accolloform %}
         <form action="https://accolli.it/cartadiaccollo" method="POST">
@@ -57,31 +80,10 @@
             <label for="sender1">Il tuo nome</label>
             <input name="sender" type="text" class="form-control" id="sender1" placeholder="Foo Bar">
           </div>
-          <button type="submit" class="btn btn-primary">Crea</button>
+          <button type="submit" class="btn btn-secondary">Crea</button>
         </form>
         {% endif %}
-      </main>
-      {% if slideshow %}
-      <a href="https://accolli.it/create" class="btn btn-sm btn-primary" role="button">Crea ed invia una carta di accollo</a>
-      <div class="row row-margin-10">
-        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img class="d-block w-100" src="https://accolli.it/static/cards/429e16d1-13a5-11ea-8c15-38f9d358ebff.png" alt="accollo1">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block w-100" src="https://accolli.it/static/cards/f5c0b6e8-13a5-11ea-b008-38f9d358ebff.png" alt="accollo2">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block w-100" src="https://accolli.it/static/cards/5af4e9bd-13a6-11ea-934a-38f9d358ebff.png" alt="accollo3">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block w-100" src="https://accolli.it/static/cards/2ab2d3de-13ab-11ea-8932-38f9d358ebff.png" alt="accollo4">
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}      
+      </main>    
       <footer class="mastfoot mt-auto">
         <div class="inner">
           <p>A <a href="https://twitter.com/luckysideburn">@luckysideburn</a> production.</p>
