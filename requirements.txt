@@ -126,7 +126,7 @@ python-telegram-bot==11.1.0
 python2-secrets==1.0.5
 pytz==2019.1
 pyvmomi==6.7.1.2018.12
-PyYAML==3.13
+PyYAML==5.1
 qrcode==6.1
 regex==2019.2.7
 requests==2.21.0
