@@ -46,7 +46,7 @@
               <p class="card-text">Stato: <font class="card-text {{text}}">{{card_status_desc}}</font></p>
               <div class="container">   
                 <div class="row row-margin-05">
-                  <a href="http://www.facebook.com/dialog/send?app_id=1243616632488115&amp;link=https://accolli.it/dashboard_accolli?token={{request.args.get('dashboard_token')}}&amp;redirect_uri=https://accolli.it/dashboard_accolli?token={{request.args.get('dashboard_token')}}" role="button" class="btn btn-sm btn-info">Invia tramite facebook!</a>
+                  <a href="http://www.facebook.com/dialog/send?app_id=1243616632488115&amp;link=https://accolli.it/static/cards/{{request.args.get('id')}}.png&amp;redirect_uri=https://accolli.it/static/cards/{{request.args.get('id')}}.png" role="button" class="btn btn-sm btn-info">Invia tramite facebook!</a>
                 </div>
                 <div class="row row-margin-10">
                   <div class="d-flex justify-content-between align-items-center">
