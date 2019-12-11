@@ -46,7 +46,7 @@
               <p class="card-text">Stato: <font class="card-text {{text}}">{{card_status_desc}}</font></p>
               <div class="container">   
                 <div class="row row-margin-05">
-                  <a href="http://www.facebook.com/dialog/send?app_id=1243616632488115&amp;link=https://accolli.it/static/cards/{{request.args.get('id')}}.png&amp;redirect_uri=https://accolli.it/static/cards/{{request.args.get('id')}}.png" role="button" class="btn btn-sm btn-info">Invia tramite facebook!</a>
+                  <a href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{emailbody}}" class="btn btn-primary mb-2" role="button">Invia tramite email!</a>
                 </div>
                 <div class="row row-margin-10">
                   <div class="d-flex justify-content-between align-items-center">
@@ -63,6 +63,7 @@
                     <small class="text-muted"></small>
                   </div>
                 </div>   
+               <!--
                 <div class="row row-margin-05">
                   <form action="https://accolli.it/message?id={{request.args.get('id')}}&token={{request.args.get('token')}}" method="POST" class="form-inline">
                     <div class="form-group">
@@ -72,6 +73,7 @@
                      <button type="submit" class="btn btn-primary mb-2">Invia tramite e-mail</button>
                   </form>
                 </div>
+              -->
               </div>
             </div>
           </div>

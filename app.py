@@ -262,6 +262,9 @@ def show():
   token = request.args.get('token')
   card = read_card_mongo(card_id,token)
   card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
+  emailbody = 'Gentile utente,%0A%0AComplimenti hai ricevuto un Carta Di Accollo da ' + card['sender'] +'!%0A%0A' \
+  'Puoi visualizzarla e scaricarla al seguente link:%0Ahttps://accolli.it/show?id=' + card_id + '%26token=' \
+  + token + '%0A%0A%0A%0AGrazie,%0AAccolli Operation Team'
   if card:
     print("Card Image URL: " + card_img_url)
     if card['status'] == 'open':
@@ -276,7 +279,7 @@ def show():
     else:
       card_stauts_desc = 'uhm... stato accollo indefinito.'
 
-    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text)
+    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text, emailbody = emailbody)
   elif card == False:
     return render_template('access_denied.html')
 
