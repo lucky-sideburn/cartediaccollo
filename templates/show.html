@@ -48,6 +48,15 @@
                 <div class="row row-margin-05">
                   <a href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{emailbody}}" class="btn btn-primary mb-2" role="button">Invia tramite email!</a>
                 </div>
+                {% if request.args.get('status') == 'done' %}
+                <div class="row row-margin-05">
+                  <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao%2C%0A%0ATi%20comunico%20che%20ho%20terminato%20l%27attivit%C3%A0.%0A%0AL%27accollo%20che%20puoi%20visionare%20al%20seguente%20link%20:%20%0Ahttps://accolli.it/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0A%20%C3%A8%20stato%20completato%21%0A%0ASaluti%2C%0A{{request.args.get('sender')}}%0A%0A" class="btn btn-success mb-2" role="button">Notifica che hai finito!</a>
+                </div>
+                {% elif request.args.get('status') == 'progress' %}
+                <div class="row row-margin-05">
+                  <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao!%0A%0AHo%20ricevuto%20la%20tua%20Carta%20Di%20Accollo%20e%20volevo%20comunicarti%20che%20ci%20sto%20lavorando%21%0A%0APuoi%20visualizzare%20la%20carta%20al%20seguente%20link:%0Ahttps://accolli.it/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0AA%20presto%21" class="btn btn-warning mb-2" role="button">Notifica che ci stai lavorando!</a>
+                </div>
+                {% endif %}
                 <div class="row row-margin-10">
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">

@@ -235,7 +235,7 @@ def message():
       to = [result['email']]
       subject = 'Notifica ricezione Carta Di Accollo da ' + card['sender']
       body = 'Gentile utente,\n\nComplimenti hai ricevuto un Carta Di Accollo da ' + card['sender'] +'!\n\n' \
-      'Puoi visualizzarla e scaricarla al seguente link:\n\n' + card_url + '\n\n\n\nGrazie,\nAccolli Operation Team'
+      'Puoi visualizzarla e scaricarla al seguente link:\n\n' + card_url + '\n\nGrazie,\nAccolli Operation Team'
       email_text = """\
 From: %s
 To: %s
@@ -254,7 +254,8 @@ Subject: %s
 def changestatus():
   card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token') 
   change_card_status(request.args.get('id'),request.args.get('status'))
-  return redirect(card_url, code=302)
+  card = read_card_mongo(request.args.get('id'), request.args.get('token'))
+  return redirect(card_url + '&status=' + request.args.get('status') + '&sender=' + card['sender'], code=302)
 
 @app.route("/show")
 def show():
@@ -262,9 +263,9 @@ def show():
   token = request.args.get('token')
   card = read_card_mongo(card_id,token)
   card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
-  emailbody = 'Gentile utente,%0A%0AComplimenti hai ricevuto un Carta Di Accollo da ' + card['sender'] +'!%0A%0A' \
+  emailbody = 'Gentile Utente,%0A%0AComplimenti hai ricevuto una Carta Di Accollo da ' + card['sender'] +'!%0A%0A' \
   'Puoi visualizzarla e scaricarla al seguente link:%0Ahttps://accolli.it/show?id=' + card_id + '%26token=' \
-  + token + '%0A%0A%0A%0AGrazie,%0AAccolli Operation Team'
+  + token + '%0A%0A%0AGrazie,%0AAccolli Operation Team'
   if card:
     print("Card Image URL: " + card_img_url)
     if card['status'] == 'open':
