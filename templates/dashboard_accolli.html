@@ -14,73 +14,46 @@
 
     <!-- Bootstrap core CSS -->
     <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="album.css" rel="stylesheet">
-
   </head>
 
   <body>
+    <div class="cover-container d-flex h-100 p-3 mx-auto">
+      <nav class="navbar navbar-light" style="background-color: #fff;">
+        <a class="nav-link active" href="https://accolli.it">Home</a>
+        <a class="nav-link" href="mailto:luckysideburn@gmail.com">Contact accolli.it</a>
+      </nav>
+    </div>
 
-    <header>
-      <div class="collapse bg-dark" id="navbarHeader">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-8 col-md-7 py-4">
-
-            </div>
-            <div class="col-sm-4 offset-md-1 py-4">
-              <h4 class="text-white">Contact</h4>
-              <ul class="list-unstyled">
-                <li><a href="https://twitter.com/luckysideburn" class="text-white">Follow on Twitter</a></li>
-                <li><a href="mailto:luckysideburn@gmail.com" class="text-white">Email me</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="navbar navbar-dark bg-dark box-shadow">
-        <div class="container d-flex justify-content-between">
-          <a href="https://accolli.it" class="navbar-brand d-flex align-items-center">
-            Home
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </div>
-    </header>
     <main role="main">
-      <section class="jumbotron">
-        <div class="container">
-        {% if dashboard_name != '' %}
-          <p class="lead">
-Gentile {{dashboard_name}}, benvenuto nel tuo MySpace Degli Accolli. Utilizza questo spazio per auto-accollarti generandoti delle Carte Di Accollo <a href="https://accolli.it?id={{id}}">qui</a>, o dai ai tuoi contatti <a href="https://accolli.it?id={{id}}">questo link</a> per farlo fare a loro. Ricordati di prendere nota del <a href="https://accolli.it/dashboard_accolli?token={{token}}">link al tuo MySpace Degli Accolli</a> e di <a href="https://accolli.it/dashboard_accolli?token={{token}}">refreshare</a> per visualizzare eventuali nuove carte di accollo.
-          </p>
-        {% endif %}
-          {% if request.args.get('input_alert') == '1' %}
-          <div class="alert alert-warning" role="alert">
-            Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
-          </div>
-          {% endif %}
-          {% if view_form %}
-          <p class="lead text-center">
-            Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
-          </p>
-          <form action="https://accolli.it/dashboard_accolli/create" method="POST">
-            <div class="row justify-content-md-center">
-              <div class="col-md-auto">
-                <label class="sr-only" for="inlineFormInput">Nome</label>
-                <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
-              </div>
-              <div class="col-md-auto">
-                <button type="submit" class="btn btn-secondary mb-2">Invia</button>
-              </div>
-            </div>
-          </form>
-          {% endif %}
+      <div class="container">
+      {% if session['username'] %}
+        <p class="lead">
+Gentile {{session['username']}}, benvenuto nel tuo MySpace Degli Accolli. Utilizza questo spazio per auto-accollarti generandoti delle Carte Di Accollo <a href="https://accolli.it?id={{id}}">qui</a>, o dai ai tuoi contatti <a href="https://accolli.it?id={{id}}">questo link</a> per farlo fare a loro. Ricordati di <a href="/dashboard_accolli">refreshare</a> per visualizzare eventuali nuove carte di accollo.
+        </p>
+      {% endif %}
+        {% if request.args.get('input_alert') == '1' %}
+        <div class="alert alert-warning" role="alert">
+          Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
         </div>
-      </section>
-      <div class="album py-5 bg-light">
+        {% endif %}
+        {% if view_form %}
+        <p class="lead text-center">
+          Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
+        </p>
+        <form action="https://accolli.it/dashboard_accolli/create" method="POST">
+          <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+              <label class="sr-only" for="inlineFormInput">Nome</label>
+              <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
+            </div>
+            <div class="col-md-auto">
+              <button type="submit" class="btn btn-secondary mb-2">Invia</button>
+            </div>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+      <div class="album py-5">
         <div class="container">
           <div class="row">
             {% for card in accolli %}

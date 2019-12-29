@@ -1,6 +1,9 @@
 # coding=utf-8
-from PIL import ImageFont, Image, ImageDraw
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from PIL import Image as PILImage
+from PIL import ImageDraw as PILImageDraw
+from PIL import ImageFont as PILImageFont
+
+from flask import Flask, render_template, request, send_file, redirect, url_for, Response, session
 from datetime import datetime
 import time
 import qrcode
@@ -12,16 +15,61 @@ import string
 import secrets
 import random
 import smtplib
+from flask_appbuilder import Model
 import base64
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_pymongo import PyMongo
+import bcrypt
 
 app = Flask(__name__)
+app.config['MONGO_DBNAME'] = 'cartediaccollo'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/cartediaccollo'
+app.config['SECRET_KEY'] = 'secret_key'
+mongo = PyMongo(app)
 client = MongoClient()
 client = MongoClient('localhost', 27017)
+
+class User(UserMixin):
+    def __init__(self , username , password , id , active=True):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.active = active
+
+    def get_id(self):
+        return self.id
+
+    def is_active(self):
+        return self.active
+
+    def get_auth_token(self):
+        return make_secure_token(self.username , key='secret_key')
+
+class UsersRepository:
+    def __init__(self):
+        self.users = dict()
+        self.users_id_dict = dict()
+        self.identifier = 0
+    
+    def save_user(self, user):
+        self.users_id_dict.setdefault(user.id, user)
+        self.users.setdefault(user.username, user)
+    
+    def get_user(self, username):
+        return self.users.get(username)
+    
+    def get_user_by_id(self, userid):
+        return self.users_id_dict.get(userid)
+    
+    def next_index(self):
+        self.identifier +=1
+        return self.identifier
+
+users_repository = UsersRepository()
 
 def randomString(stringLength=10):
     lettersAndDigits = string.ascii_lowercase + string.digits
     return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
-
 
 # return an array of accolli related to a sepicific dashboard
 def find_accolli_for_dashboard(dashboard_id):
@@ -37,21 +85,10 @@ def find_accolli_for_dashboard(dashboard_id):
 def is_valid_dashboard(dashboard_id):
   db = client['cartediaccollo']
   collection = db['dashboards']
-  dashboard = collection.find_one({"uuid": dashboard_id})
+  dashboard = collection.find_one({"name": dashboard_id})
   if dashboard != None:
     return dashboard 
   else:
-    return None
-
-def check_valid_authorization(dashboard_id,token):
-  db = client['cartediaccollo']
-  collection = db['dashboards']
-  dashboard = collection.find_one({"uuid": dashboard_id, "token": token})
-  if dashboard != None:
-    print('Dashboard' + dashboard_id + " with token " + token + " found!")
-    return dashboard 
-  else:
-    print('Dashboard' + dashboard_id + " with token " + token + " not found!")
     return None
 
 def generate_dashboard_id_and_token(name):
@@ -77,7 +114,7 @@ def read_card_mongo(uuid,token):
   db = client['cartediaccollo']
   collection = db['carte']
   card = collection.find_one({"uuid": uuid})
-  print card
+  print(card)
   if token != card['token']:
     return False
   else:
@@ -90,7 +127,7 @@ def write_card_mongo(card_id,token,card_url,sender,dashboard_id):
   collection = db['carte']
   post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id}
   post_id = collection.insert_one(post).inserted_id
-  print post_id
+  print(post_id)
 
 def change_card_status(card_id,new_status):
   client = MongoClient()
@@ -102,17 +139,17 @@ def change_card_status(card_id,new_status):
   return collection.update_one(myquery, newvalues)
 
 def create_card_img(card_id,recipient,task,sender,token):
-  img = Image.new('RGB', (1024, 800), color = (0, 0, 0))
-  d = ImageDraw.Draw(img)
+  img = PILImage.new('RGB', (1024, 800), color = (0, 0, 0))
+  d = PILImageDraw.Draw(img)
   
-  font = ImageFont.truetype("Inconsolata-Regular.ttf",28)
+  font = PILImageFont.truetype("Inconsolata-Regular.ttf",28)
   card_text = "Gentile " + recipient + ",\n\n\nLa presente Carta Di Accollo creata in data " + time.strftime("%d/%m/%Y") + \
   "\ncertifica che ho preso in considerazione la tua richiesta.\n\n" \
   "Io sottoscritto, " + sender + ", mi impegno ad occuparmi di:\n" + task + ".\n\n" \
   "Per favore non chiedermi troppo spesso feedback sullo stato\ndi completamento! Ci sto lavorando!\n\n"
   d.text((100,100), card_text, fill=(255,255,255),font=font)
   
-  font = ImageFont.truetype("Inconsolata-Regular.ttf",24)
+  font = PILImageFont.truetype("Inconsolata-Regular.ttf",24)
   details = "ID: " + card_id + "\n" \
   "Token: " + token + "\n" \
   "Scansiona il QR code per accedere alla richiesta" \
@@ -129,30 +166,32 @@ def create_card_img(card_id,recipient,task,sender,token):
   )
 
   qr_data = "https://accolli.it/show?id=" + card_id + "&token=" + token  
-  print qr_data
+  print(qr_data)
   qr.add_data(qr_data)
   qr.make(fit=True)
   img = qr.make_image(fill_color="white", back_color="black")
   img.save('static/cards/' + card_id + '-qr.png')
 
-  images = map(Image.open, ['static/cards/' + card_id + '-text.png','static/cards/' + card_id + '-qr.png'])
+  images = [PILImage.open(x) for x in ['static/cards/' + card_id + '-text.png', 'static/cards/' + card_id + '-qr.png']]
   widths, heights = zip(*(i.size for i in images))
-
   total_width = sum(widths)
   max_height = max(heights)
 
-  new_im = Image.new('RGB', (total_width, max_height))
+  new_im = PILImage.new('RGB', (total_width, max_height))
 
   x_offset = 0
   for im in images:
     new_im.paste(im, (x_offset,0))
     x_offset += im.size[0]
 
-  new_im.save('static/cards/' + card_id + '.png')
+  new_im.save('static/cards/' + card_id + '.png', format="png")
   return card_id
 
 @app.route("/")
 def main():
+  if 'username' in session:
+      print('You are logged in as ' + session['username'])
+
   if request.args.get('id') != None:
     dashboard = is_valid_dashboard(request.args.get('id'))
     if dashboard != None:
@@ -175,7 +214,7 @@ def delete():
   dashboard_id = data_split[0]
   token = data_split[1]  
   myquery = { "uuid": request.args.get('id'), "dashboard_id": dashboard_id }
-  print "Deleted card: " + str(collection.delete_one(myquery))
+  print("Deleted card: " + str(collection.delete_one(myquery)))
   return redirect('/dashboard_accolli?token=' + request.args.get('token'), code=302)
 
 @app.route("/dashboard_accolli")
@@ -184,29 +223,9 @@ def dashboard_accolli():
   authenticated_dashboard = None
   accolli = {}
 
-  if 'Authorization' in request.headers:
-    print("client has Header Authorization: " + request.args.get('token'))
-    authorization_header = request.headers['Authorization']
-    data = base64.b64decode(authorization_header)
-    dashboard_split_array = data.split(':')
-    dashboard_id = dashboard_split_array[0]
-    token = dashboard_split_array[1]
-    authenticated_dashboard = check_valid_authorization(dashboard_id,token)
-
-  elif request.args.get('token') != None:
-    print("client has token: " + request.args.get('token'))
-    data = base64.b64decode(request.args.get('token'))
-    print data
-    dashboard_split_array = data.split(':')
-    dashboard_id = dashboard_split_array[0]
-    token = dashboard_split_array[1]
-    print('dashboard id: ' + dashboard_id + ' - token: ' +  token)
-    authenticated_dashboard = check_valid_authorization(dashboard_id,token)
-
-  if authenticated_dashboard != None:
-    print "User authenticated whith uuid " + authenticated_dashboard['uuid']
-    accolli = find_accolli_for_dashboard(authenticated_dashboard['uuid'])
-    return render_template('dashboard_accolli.html', token=request.args.get('token'), alert=False, id=dashboard_id, dashboard_name=authenticated_dashboard['name'], accolli=accolli) 
+  if session['username']:
+    accolli = find_accolli_for_dashboard(session['username'])
+    return render_template('dashboard_accolli.html', alert=False, id=session['username'], dashboard_name=session['username'], accolli=accolli) 
   else:
     return render_template('dashboard_accolli.html', view_form=True, dashboard_name='', accolli = accolli)
 
@@ -226,7 +245,7 @@ def message():
   gmail_user = os.environ['ACCOLLI_MAIL_USER']
   gmail_password = os.environ['ACCOLLI_MAIL_PASSWORD']
   card = read_card_mongo(request.args.get('id'),request.args.get('token'))
-  print "Sending email to " + result['email']
+  print("Sending email to " + result['email'])
   try:
       server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
       server.ehlo()
@@ -246,7 +265,7 @@ Subject: %s
       server.sendmail(sent_from, to, email_text)
       server.close()
   except:
-      print 'Something went wrong...'
+      print('Something went wrong...')
 
   return redirect(card_url, code=302)
 
@@ -311,7 +330,7 @@ def cartadiaccollo():
       token = randomString(20)
       card_id = create_card_img(str(uuid.uuid1()),result['recipient'],result['task'],result['sender'],token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      print card_url
+      print(card_url)
       write_card_mongo(card_id,token,card_url,result['sender'],None)
       #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
@@ -319,5 +338,39 @@ def cartadiaccollo():
   else:
     return redirect('https://accolli.it',code=302) 
 
+@app.route('/logout')
+def logout():
+   print("Logout " + session['username'])
+   session.pop('username', None)
+   return redirect(url_for('main'))
+
+@app.route('/login', methods=['POST'])
+def login():
+    users = mongo.db.users
+    login_user = users.find_one({'name' : request.form['username']})
+    if login_user:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']:
+            session['username'] = request.form['username']
+            return redirect(url_for('main'))
+
+    return render_template('index.html', accolloform=True, invalid_credential=True)
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        users = mongo.db.users
+        existing_user = users.find_one({'name' : request.form['username']})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
+            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            session['username'] = request.form['username']
+            dashboard = generate_dashboard_id_and_token(request.form['username'])
+            return redirect(url_for('main'))
+        return render_template('index.html', accolloform=True, user_already_exists=True)
+
+    return render_template('register.html')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+

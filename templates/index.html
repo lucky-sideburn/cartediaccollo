@@ -24,7 +24,11 @@
     .row-margin-20 { margin-top: 2.0em; }
     .row-margin-30 { margin-top: 3.0em; }
   </style>
-
+  <script type="text/javascript">
+    function closeLoginModal() {
+      $('#loginModal').modal('hide');
+    }
+  </script>
   <body class="text-center">
 
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
@@ -32,10 +36,88 @@
         <div class="inner">
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="https://accolli.it">Home</a>
-            <a class="nav-link" href="/dashboard_accolli">MySpace Degli Accolli</a>
+           <!-- <a class="nav-link" href="/dashboard_accolli">MySpace Degli Accolli</a> -->
+            {% if not session['username'] %}
+            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Login</a>
+            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Registrati</a>
+            {% endif %}
+            {% if session['username'] %}
+            <a class="nav-link" href="/logout">Logout ({{session['username']}})</a>
+            {% endif %}
           </nav>
         </div>
       </header>
+      <!-- Modal -->
+      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-9 col-md-offset-4">
+                    <form method=POST action="{{ url_for('login') }}">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" name="pass" placeholder="Password">
+                      </div>
+                      <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                    </form>
+                    <br>
+                    <div>
+                      Don't have an account? <a onclick="closeLoginModal()" class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign up here</a>.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Registrati</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-9 col-md-offset-4">
+                    <form method=POST action="{{ url_for('register') }}">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" name="pass" placeholder="Password">
+                      </div>
+                        <button type="submit" class="btn btn-primary btn-block">Registrati</button>
+                     </form>
+                     <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <main role="main" class="inner cover">
         <h1 class="cover-heading">Accolli.it</h1>
         {% if accolloformdashboard %}
@@ -43,17 +125,29 @@
         {% else %}
         <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
         </p>
+        {% if session['username'] %}
         <p class="lead">
-        Se invece hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
+        {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
         </p>
+        {% endif %}
         {% endif %}
         {% if alert %}
         <div class="alert alert-warning" role="alert">
           Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri e massimo di 60 caratteri
         </div>
         {% endif %}
+        {% if user_already_exists %}
+        <div class="alert alert-warning" role="alert">
+          Gentile utente, purtroppo questo username già esiste in accolli.it!
+        </div>
+        {% endif %}
+        {% if invalid_credential %}
+        <div class="alert alert-warning" role="alert">
+          Nome utente o password errati!
+        </div>
+        {% endif %}
         {% if accolloformdashboard %}
-        <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['uuid']}}&dashboard_name={{dashboard['name']}}" method="POST">
+        <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
           <div class="form-group">
             <label for="task1">Attività richiesta</label>
             <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
@@ -63,7 +157,7 @@
             <input name="sender" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
           </div>
           <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
-          <button type="submit" class="btn btn-secondary">Crea</button>
+          <button type="submit" class="btn btn-primary">Crea</button>
         </form>
         {% endif %}
         {% if accolloform %}
@@ -80,7 +174,7 @@
             <label for="sender1">Il tuo nome</label>
             <input name="sender" type="text" class="form-control" id="sender1" placeholder="Foo Bar">
           </div>
-          <button type="submit" class="btn btn-secondary">Crea</button>
+          <button type="submit" class="btn btn-primary">Crea</button>
         </form>
         {% endif %}
       </main>    
