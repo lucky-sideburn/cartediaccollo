@@ -126,8 +126,6 @@ def write_card_mongo(card_id,token,card_url,sender,dashboard_id):
   print(post_id)
 
 def change_card_status(card_id,new_status):
-  client = MongoClient()
-  client = MongoClient('localhost', 27017)
   db = client['cartediaccollo']
   collection = db['carte']
   myquery = { "uuid": card_id }
