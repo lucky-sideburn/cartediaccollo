@@ -16,7 +16,7 @@
     <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="static/cover.css" rel="stylesheet">
+    <link href="static/cover.css?rnd=123" rel="stylesheet">
   </head>  
   <style>
     .row-margin-05 { margin-top: 0.5em; }
@@ -42,7 +42,8 @@
             <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Registrati</a>
             {% endif %}
             {% if session['username'] %}
-            <a class="nav-link" href="/logout">Logout ({{session['username']}})</a>
+            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
         </div>
