@@ -199,17 +199,11 @@ def create():
 
 @app.route("/delete")
 def delete():
-  client = MongoClient()
-  client = MongoClient('localhost', 27017)
   db = client['cartediaccollo']
   collection = db['carte']
-  data = base64.b64decode(request.args.get('token'))
-  data_split = data.split(':')
-  dashboard_id = data_split[0]
-  token = data_split[1]  
-  myquery = { "uuid": request.args.get('id'), "dashboard_id": dashboard_id }
+  myquery = { "uuid": request.args.get('id'), "dashboard_id": session['username']}
   print("Deleted card: " + str(collection.delete_one(myquery)))
-  return redirect('/dashboard_accolli?token=' + request.args.get('token'), code=302)
+  return redirect('/dashboard_accolli', code=302)
 
 @app.route("/dashboard_accolli")
 def dashboard_accolli():
@@ -303,15 +297,21 @@ def cartadiaccollo():
     if request.args.get('to') == 'dashboard':
       result = request.form
       inputs = ["sender","task"]
-      for _input in inputs:
-        if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
-          return render_template('index.html', accolloformdashboard=True, alert=True, accolloform=True)
-      
       token = randomString(20)
-      print("Foo " + request.args.get('dashboard_id'))
-      card_id = create_card_img(str(uuid.uuid1()),request.args.get('dashboard_name'),result['task'],result['sender'],token)
+
+      if request.args.get('autoaccollo') == "yes":
+        sender = result['dashboard_name']
+        print("Foo " + request.args.get('dashboard_id'))
+
+      else:
+        for _input in inputs:
+          if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
+            return render_template('index.html', accolloformdashboard=True, alert=True, accolloform=True)
+        sender = result['sender']
+
+      card_id = create_card_img(str(uuid.uuid1()), request.args.get('dashboard_name'), result['task'], sender, token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      write_card_mongo(card_id,token,card_url,result['sender'],request.args.get('dashboard_id'))
+      write_card_mongo(card_id,token, card_url, sender, request.args.get('dashboard_id'))
       return redirect(card_url, code=302)
 
     else:
