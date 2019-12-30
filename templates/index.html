@@ -36,7 +36,6 @@
         <div class="inner">
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="https://accolli.it">Home</a>
-           <!-- <a class="nav-link" href="/dashboard_accolli">MySpace Degli Accolli</a> -->
             {% if not session['username'] %}
             <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Login</a>
             <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Registrati</a>
@@ -173,7 +172,7 @@
           </div>
           <div class="form-group">
             <label for="sender1">Il tuo nome</label>
-            <input name="sender" type="text" class="form-control" id="sender1" placeholder="Foo Bar">
+            
           </div>
           <button type="submit" class="btn btn-primary">Crea</button>
         </form>
