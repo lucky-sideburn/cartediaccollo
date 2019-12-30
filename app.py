@@ -23,11 +23,11 @@ import bcrypt
 
 app = Flask(__name__)
 app.config['MONGO_DBNAME'] = 'cartediaccollo'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/cartediaccollo'
+app.config['MONGO_URI'] = 'mongodb://' + os.environ['MONGO_HOST'] + ':27017/cartediaccollo'
 app.config['SECRET_KEY'] = 'secret_key'
 mongo = PyMongo(app)
 client = MongoClient()
-client = MongoClient('localhost', 27017)
+client = MongoClient(os.environ['MONGO_HOST'], 27017)
 
 class User(UserMixin):
     def __init__(self , username , password , id , active=True):
@@ -109,8 +109,6 @@ def generate_dashboard_id_and_token(name):
     False
 
 def read_card_mongo(uuid,token):
-  client = MongoClient()
-  client = MongoClient('localhost', 27017)
   db = client['cartediaccollo']
   collection = db['carte']
   card = collection.find_one({"uuid": uuid})
@@ -121,8 +119,6 @@ def read_card_mongo(uuid,token):
     return card
 
 def write_card_mongo(card_id,token,card_url,sender,dashboard_id):
-  client = MongoClient()
-  client = MongoClient('localhost', 27017)
   db = client['cartediaccollo']
   collection = db['carte']
   post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id}

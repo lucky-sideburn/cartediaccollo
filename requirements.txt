@@ -3,3 +3,6 @@ Flask-Admin==1.5.4
 Pillow==6.1.0
 pymongo==3.9.0
 qrcode==6.1
+flask_appbuilder
+flask_pymongo
+bcrypt
