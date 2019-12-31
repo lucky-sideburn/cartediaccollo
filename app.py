@@ -24,7 +24,8 @@ import bcrypt
 app = Flask(__name__)
 app.config['MONGO_DBNAME'] = 'cartediaccollo'
 app.config['MONGO_URI'] = 'mongodb://' + os.environ['MONGO_HOST'] + ':27017/cartediaccollo'
-app.config['SECRET_KEY'] = 'secret_key'
+app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
+
 mongo = PyMongo(app)
 client = MongoClient()
 client = MongoClient(os.environ['MONGO_HOST'], 27017)
@@ -266,6 +267,10 @@ def changestatus():
 
 @app.route("/show")
 def show():
+  
+  if request.args.get('token') == None:
+    return render_template('access_denied.html')
+
   card_id = request.args.get('id')
   token = request.args.get('token')
   card = read_card_mongo(card_id,token)
