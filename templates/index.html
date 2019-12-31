@@ -30,15 +30,14 @@
     }
   </script>
   <body class="text-center">
-
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
       <header class="masthead mb-auto">
         <div class="inner">
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="https://accolli.it">Home</a>
             {% if not session['username'] %}
-            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Login</a>
-            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Registrati</a>
+            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
+            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
             {% endif %}
             {% if session['username'] %}
             <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
@@ -89,7 +88,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Registrati</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Sign In</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -107,7 +106,7 @@
                         <label for="exampleInputPassword1">Password</label>
                         <input type="password" class="form-control" name="pass" placeholder="Password">
                       </div>
-                        <button type="submit" class="btn btn-primary btn-block">Registrati</button>
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                      </form>
                      <br>
                   </div>
@@ -117,72 +116,102 @@
           </div>
         </div>
       </div>
-
-      <main role="main" class="inner cover">
-        <h1 class="cover-heading">Accolli.it</h1>
-        {% if accolloformdashboard %}
-        <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
-        {% else %}
-        <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
-        </p>
-        {% if session['username'] %}
-        <p class="lead">
-        {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
-        </p>
-        {% endif %}
-        {% endif %}
-        {% if alert or request.args.get('alert') == 'true' %}
-        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 20 mentre l'attività richiesta può contenere 60 caratteri.
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <div class="panel panel-info">
+              <div class="panel-heading">
+                <h5 class="panel-title">Cos'è una Carta di Acollo?</h5>
+              </div>
+              <div class="panel-body">
+                <p>Certifica che qualcuno ti si sta accollando!<br>Guarda questo esempio  <a href="static/example.png">di come Erich si acolla a John!</a></p>
+                {% if alert or request.args.get('qr_how_to') == 'true' %}
+                <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  Hai scansionato il QR della carta di Erich e John! Crea anche tu carte di accollo! 
+                </div>
+                {% endif %}
+                <img src="static/example.png" class="img-fluid img-rounded zoom" alt="Responsive image">
+              </div>
+            </div>
+          </div>
+        <div class="col-lg">
+          <main role="main" class="inner cover">
+            <div class="p-3 mb-2 bg-info text-white"><h1 class="cover-heading">Accolli.it</h1></div>
+            
+            {% if accolloformdashboard %}
+            <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+            {% else %}
+            <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
+            </p>
+            {% if session['username'] %}
+            <p class="lead">
+            {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
+            </p>
+            {% endif %}
+            {% endif %}
+            {% if alert or request.args.get('alert') == 'true' %}
+            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 20 mentre l'attività richiesta può contenere 60 caratteri.
+            </div>
+            {% endif %}
+            {% if user_already_exists %}
+            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Gentile utente, purtroppo questo username già esiste in accolli.it!
+            </div>
+            {% endif %}
+            {% if invalid_credential %}
+            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Nome utente o password errati!
+            </div>
+            {% endif %}
+            {% if accolloformdashboard %}
+            <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
+              <div class="form-group">
+                <label for="task1">Attività richiesta</label>
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
+              </div>
+              <div class="form-group">
+                <label for="sender">Il tuo nome</label>
+                <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Persona che si sta accollando">
+                <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
+                <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
+              </div>
+              <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
+              <button type="submit" class="btn btn-primary">Crea</button>
+            </form>
+            {% endif %}
+            {% if accolloform %}
+            <form action="https://accolli.it/cartadiaccollo" method="POST">
+              <div class="form-group">
+                <label for="task1">Attività richiesta</label>
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
+              </div>
+              <div class="form-group">
+                <label for="recipient1">Chi si sta accollando</label>
+                <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
+              </div>
+              <div class="form-group">
+                <label for="sender1">Il tuo nome</label>
+                <input name="sender" type="text" class="form-control" id="recipient3" placeholder="Persona che si sta accollando">
+              </div>
+              <button type="submit" class="btn btn-primary">Crea</button>
+            </form>
+            {% endif %}
+          </main>
         </div>
-        {% endif %}
-        {% if user_already_exists %}
-        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          Gentile utente, purtroppo questo username già esiste in accolli.it!
+      </div>
+      <div class="row row-margin-30 justify-content-md-center">
+        <h4>Prova il comodo wallet degli accolli! </h4>
+        <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
+        <div class="col-md-auto">
+          <img src="static/wallet.png" class="img-fluid img-rounded zoom" alt="Responsive image">
         </div>
-        {% endif %}
-        {% if invalid_credential %}
-        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          Nome utente o password errati!
-        </div>
-        {% endif %}
-        {% if accolloformdashboard %}
-        <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
-          <div class="form-group">
-            <label for="task1">Attività richiesta</label>
-            <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
-          </div>
-          <div class="form-group">
-            <label for="sender">Il tuo nome</label>
-            <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Persona che si sta accollando">
-            <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
-            <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
-          </div>
-          <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
-          <button type="submit" class="btn btn-primary">Crea</button>
-        </form>
-        {% endif %}
-        {% if accolloform %}
-        <form action="https://accolli.it/cartadiaccollo" method="POST">
-          <div class="form-group">
-            <label for="task1">Attività richiesta</label>
-            <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
-          </div>
-          <div class="form-group">
-            <label for="recipient1">Chi si sta accollando</label>
-            <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
-          </div>
-          <div class="form-group">
-            <label for="sender1">Il tuo nome</label>
-            <input name="sender" type="text" class="form-control" id="recipient3" placeholder="Persona che si sta accollando">
-          </div>
-          <button type="submit" class="btn btn-primary">Crea</button>
-        </form>
-        {% endif %}
-      </main>    
+      </div>
+    </div>
       <footer class="mastfoot mt-auto">
         <div class="inner">
           <p>A <a href="https://twitter.com/luckysideburn">@luckysideburn</a> production.</p>

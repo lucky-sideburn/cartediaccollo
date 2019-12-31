@@ -267,7 +267,10 @@ def changestatus():
 
 @app.route("/show")
 def show():
-  
+
+  if request.args.get('id') == "9d32a088-2ba9-11ea-b25c-38f9d358ebff":
+    return redirect('https://accolli.it?qr_how_to=true', code=302)
+
   if request.args.get('token') == None:
     return render_template('access_denied.html')
 
