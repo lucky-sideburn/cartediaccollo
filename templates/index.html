@@ -137,19 +137,23 @@
           </div>
         <div class="col-lg">
           <main role="main" class="inner cover">
-            <div class="p-3 mb-2 bg-info text-white"><h1 class="cover-heading">Accolli.it</h1></div>
-            
-            {% if accolloformdashboard %}
-            <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
-            {% else %}
-            <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
-            </p>
-            {% if session['username'] %}
-            <p class="lead">
-            {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
-            </p>
-            {% endif %}
-            {% endif %}
+
+            <div class="row row-margin-05 justify-content-md-center">
+              <div class="p-3 mb-9 bg-warning text-dark"><h1 class="cover-heading">Accolli.it</h1></div>
+            </div>
+            <div class="row row-margin-05 justify-content-md-center">
+              {% if accolloformdashboard %}
+              <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+              {% else %}
+              <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
+              </p>
+              {% if session['username'] %}
+              <p class="lead">
+              {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
+              </p>
+              {% endif %}
+              {% endif %}
+            </div>
             {% if alert or request.args.get('alert') == 'true' %}
             <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
