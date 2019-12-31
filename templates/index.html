@@ -36,11 +36,11 @@
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="https://accolli.it">Home</a>
             {% if not session['username'] %}
-            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
-            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
+            <a class="nav-link btn" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
+            <a class="nav-link btn" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
             {% endif %}
             {% if session['username'] %}
-            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link btn btn-danger bg-danger text-white" role="button" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
@@ -82,7 +82,6 @@
           </div>
         </div>
       </div>
-
       <!-- Modal -->
       <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -116,7 +115,11 @@
           </div>
         </div>
       </div>
+    <div class="row row-margin-05 justify-content-md-center">
+      <h1 class="cover-heading">Accolli.it</h1>
+    </div>
     <div class="container">
+
       <div class="row">
         <div class="col-lg">
           <div class="panel panel-info">
@@ -137,10 +140,6 @@
           </div>
         <div class="col-lg">
           <main role="main" class="inner cover">
-
-            <div class="row row-margin-05 justify-content-md-center">
-              <div class="p-3 mb-9 bg-warning text-dark"><h1 class="cover-heading">Accolli.it</h1></div>
-            </div>
             <div class="row row-margin-05 justify-content-md-center">
               {% if accolloformdashboard %}
               <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>

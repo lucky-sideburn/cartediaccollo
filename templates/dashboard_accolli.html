@@ -43,6 +43,10 @@
   margin-left: 1rem;
 }
 
+.autoaccollo {
+  margin-left: 2rem;
+}
+
 .nav-masthead .active {
   color: #808080;
   border-bottom-color: #000;
@@ -59,7 +63,7 @@
             {% if session['username'] %}
             <a class="nav-link active" href="https://accolli.it">Home</a>
             <a class="nav-link" href="mailto:luckysideburn@gmail.com">Contatti</a>
-            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link nav-link btn btn-danger bg-danger text-white"" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
@@ -68,41 +72,45 @@
     </div>
     <main role="main">
       <div class="container">
-      {% if session['username'] %}
-        <p class="lead">
-Gentile {{session['username']}}, benvenuto nel tuo wallet delle carte di accollo. Utilizza questo spazio per auto-accollarti generandoti delle Carte Di Accollo o dai ai tuoi contatti <a href="https://accolli.it?id={{id}}">questo link</a> per farlo fare a loro. Ricordati di <a href="/dashboard_accolli">refreshare</a> per visualizzare eventuali nuove carte di accollo.
-        </p>
-        {% if request.args.get('alert') == 'true' %}
-        <div class="alert alert-info" role="alert">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
-        </div>
-        {% endif %}
-      {% endif %}
-        {% if request.args.get('input_alert') == '1' %}
-        <div class="alert alert-info" role="alert">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
-        </div>
-        {% endif %}
-        {% if view_form %}
-        <p class="lead text-center">
-          Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
-        </p>
-        <form action="https://accolli.it/dashboard_accolli/create" method="POST">
-          <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-              <label class="sr-only" for="inlineFormInput">Nome</label>
-              <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
-            </div>
-            <div class="col-md-auto">
-              <button type="submit" class="btn btn-secondary mb-2">Invia</button>
-            </div>
+        <div class="row row-margin-05 justify-content-md-center autoaccollo">
+          {% if session['username'] %}
+          <p class="lead">
+  Gentile {{session['username']}}, benvenuto nel tuo wallet delle carte di accollo. Utilizza questo spazio per auto-accollarti generandoti delle Carte Di Accollo o dai ai tuoi contatti <a href="https://accolli.it?id={{id}}">questo link</a> per farlo fare a loro. Ricordati di <a href="/dashboard_accolli">refreshare</a> per visualizzare eventuali nuove carte di accollo.
+          </p>
+          {% if request.args.get('alert') == 'true' %}
+          <div class="alert alert-info" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
           </div>
-        </form>
+          {% endif %}
+          {% endif %}
+          {% if request.args.get('input_alert') == '1' %}
+          <div class="alert alert-info" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
+          </div>
+          {% endif %}
+          {% if view_form %}
+          <p class="lead text-center">
+            Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
+          </p>
+        </div>
+        <div class="row row-margin-05 justify-content-md-center">
+          <form action="https://accolli.it/dashboard_accolli/create" method="POST">
+            <div class="row justify-content-md-center">
+              <div class="col-md-auto">
+                <label class="sr-only" for="inlineFormInput">Nome</label>
+                <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
+              </div>
+              <div class="col-md-auto">
+                <button type="submit" class="btn btn-secondary mb-2">Invia</button>
+              </div>
+            </div>
+          </form>
+        </div>
         {% endif %}
       </div>
-      <div class="row justify-content-md-center">
+      <div class="row justify-content-md-center autoaccollo">
         <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">
           <div class="form-row align-items-center">
             <div class="col-sm-8 my-1">
