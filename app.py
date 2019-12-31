@@ -118,10 +118,10 @@ def read_card_mongo(uuid,token):
   else:
     return card
 
-def write_card_mongo(card_id,token,card_url,sender,dashboard_id):
+def write_card_mongo(card_id,token,card_url,sender,dashboard_id,task):
   db = client['cartediaccollo']
   collection = db['carte']
-  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id}
+  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id, "task": task}
   post_id = collection.insert_one(post).inserted_id
   print(post_id)
 
@@ -294,38 +294,50 @@ def show():
 @app.route('/cartadiaccollo',methods = ['POST', 'GET'])
 def cartadiaccollo():
   if request.method == 'POST':
+    result = request.form
+    inputs = ["recipient","sender","task"]
     if request.args.get('to') == 'dashboard':
-      result = request.form
-      inputs = ["sender","task"]
       token = randomString(20)
+
+      if result['external_sender'] == 'true':
+        return_url = 'https://accolli.it/?id=' + result['recipient'] + '&alert=true'      
+      elif session['username'] == result['recipient']:
+        return_url = '/dashboard_accolli?&alert=true'
+
+      for _input in inputs:
+        if (len(result[_input]) < 2):
+          return redirect(return_url, code=302)
+      if ((len(result['sender']) > 20) or (len(result['recipient']) > 20)):
+        return redirect(return_url, code=302)
+      elif (len(result['task']) > 60):
+        return redirect(return_url, code=302)
 
       if request.args.get('autoaccollo') == "yes":
         sender = result['dashboard_name']
         print("Foo " + request.args.get('dashboard_id'))
 
       else:
-        for _input in inputs:
-          if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
-            return render_template('index.html', accolloformdashboard=True, alert=True, accolloform=True)
         sender = result['sender']
 
       card_id = create_card_img(str(uuid.uuid1()), request.args.get('dashboard_name'), result['task'], sender, token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      write_card_mongo(card_id,token, card_url, sender, request.args.get('dashboard_id'))
+      write_card_mongo(card_id,token, card_url, sender, request.args.get('dashboard_id'), result['task'])
       return redirect(card_url, code=302)
 
     else:
-      result = request.form
-      inputs = ["recipient","sender","task"]
       for _input in inputs:
-        if ((len(result[_input]) < 1) or (len(result[_input]) > 60)):
+        if (len(result[_input]) < 2):
           return render_template('index.html', alert=True, accolloform=True)
+      if ((len(result['sender']) > 20) or (len(result['recipient']) > 20)):
+        return render_template('index.html', alert=True, accolloform=True)
+      elif (len(result['task']) > 60):
+        return render_template('index.html', alert=True, accolloform=True)
 
       token = randomString(20)
       card_id = create_card_img(str(uuid.uuid1()),result['recipient'],result['task'],result['sender'],token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
       print(card_url)
-      write_card_mongo(card_id,token,card_url,result['sender'],None)
+      write_card_mongo(card_id,token,card_url,result['sender'], None, result['task'])
       #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
       return redirect(card_url, code=302)

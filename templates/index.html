@@ -131,18 +131,21 @@
         </p>
         {% endif %}
         {% endif %}
-        {% if alert %}
-        <div class="alert alert-warning" role="alert">
-          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri e massimo di 60 caratteri
+        {% if alert or request.args.get('alert') == 'true' %}
+        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 20 mentre l'attività richiesta può contenere 60 caratteri.
         </div>
         {% endif %}
         {% if user_already_exists %}
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           Gentile utente, purtroppo questo username già esiste in accolli.it!
         </div>
         {% endif %}
         {% if invalid_credential %}
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           Nome utente o password errati!
         </div>
         {% endif %}
@@ -153,8 +156,10 @@
             <input name="task" type="text" class="form-control" id="task1" placeholder="fare qualcosa">
           </div>
           <div class="form-group">
-            <label for="seder">Il tuo nome</label>
-            <input name="sender" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
+            <label for="sender">Il tuo nome</label>
+            <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Persona che si sta accollando">
+            <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
+            <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
           </div>
           <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
           <button type="submit" class="btn btn-primary">Crea</button>
@@ -172,7 +177,7 @@
           </div>
           <div class="form-group">
             <label for="sender1">Il tuo nome</label>
-            <input name="sender" type="text" class="form-control" id="recipient1" placeholder="Persona che si sta accollando">
+            <input name="sender" type="text" class="form-control" id="recipient3" placeholder="Persona che si sta accollando">
           </div>
           <button type="submit" class="btn btn-primary">Crea</button>
         </form>

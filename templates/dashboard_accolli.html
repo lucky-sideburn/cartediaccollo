@@ -72,9 +72,16 @@
         <p class="lead">
 Gentile {{session['username']}}, benvenuto nel tuo wallet delle carte di accollo. Utilizza questo spazio per auto-accollarti generandoti delle Carte Di Accollo o dai ai tuoi contatti <a href="https://accolli.it?id={{id}}">questo link</a> per farlo fare a loro. Ricordati di <a href="/dashboard_accolli">refreshare</a> per visualizzare eventuali nuove carte di accollo.
         </p>
+        {% if request.args.get('alert') == 'true' %}
+        <div class="alert alert-info" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
+        </div>
+        {% endif %}
       {% endif %}
         {% if request.args.get('input_alert') == '1' %}
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-info" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
         </div>
         {% endif %}
@@ -100,6 +107,8 @@ Gentile {{session['username']}}, benvenuto nel tuo wallet delle carte di accollo
           <div class="form-row align-items-center">
             <div class="col-sm-8 my-1">
               <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
+              <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
+              <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
               <input type="text" class="form-control" id="task" name="task" placeholder="Attività da fare">
             </div>
             <div class="col-auto my-1">
@@ -122,7 +131,7 @@ Gentile {{session['username']}}, benvenuto nel tuo wallet delle carte di accollo
               {% endif %}
                 <img class="card-img-top" src="https://accolli.it/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
                 <div class="card-body">
-                  <p class="card-text"></p>
+                  <p class="card-text">{{card['task']}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}
