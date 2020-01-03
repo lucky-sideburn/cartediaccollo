@@ -73,7 +73,7 @@
           <a class="nav-link active" href="https://accolli.it">Home</a>
           <a class="nav-link" href="mailto:luckysideburn@gmail.com">Contatti</a>
           {% if session['username'] %}
-          <a class="nav-link btn btn-danger bg-danger text-white"" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+          <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
           <a class="nav-link" href="/logout">Logout</a>
           {% endif %}
         </nav>

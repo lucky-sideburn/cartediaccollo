@@ -63,7 +63,7 @@
             {% if session['username'] %}
             <a class="nav-link active" href="https://accolli.it">Home</a>
             <a class="nav-link" href="mailto:luckysideburn@gmail.com">Contatti</a>
-            <a class="nav-link nav-link btn btn-danger bg-danger text-white"" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
@@ -120,7 +120,7 @@
               <input type="text" class="form-control" id="task" name="task" placeholder="Attività da fare">
             </div>
             <div class="col-auto my-1">
-              <button type="submit" class="btn btn-primary">Auto Accollati</button>
+              <button type="submit" class="btn btn-primary">auto-accollati</button>
             </div>
           </div>
         </form>
@@ -131,7 +131,7 @@
             {% for card in accolli %}
             <div class="col-md-4">
               {% if card['status'] == 'open' %}
-              <div class="card bg-light mb-3" style="max-width: 18rem;">
+              <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
               {% elif card['status'] == 'progress' %}
               <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">             
               {% elif card['status'] == 'done' %}
@@ -143,8 +143,8 @@
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">cancella</a>              
+                      <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
+                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">cancella</a>              
                       {% elif card['status'] == 'progress' %}
                       <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
                       <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">cancella</a>  

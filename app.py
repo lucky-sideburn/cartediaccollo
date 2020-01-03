@@ -315,7 +315,7 @@ def cartadiaccollo():
       for _input in inputs:
         if (len(result[_input]) < 2):
           return redirect(return_url, code=302)
-      if ((len(result['sender']) > 20) or (len(result['recipient']) > 20)):
+      if ((len(result['sender']) > 30) or (len(result['recipient']) > 30)):
         return redirect(return_url, code=302)
       elif (len(result['task']) > 60):
         return redirect(return_url, code=302)
@@ -336,7 +336,7 @@ def cartadiaccollo():
       for _input in inputs:
         if (len(result[_input]) < 2):
           return render_template('index.html', alert=True, accolloform=True)
-      if ((len(result['sender']) > 20) or (len(result['recipient']) > 20)):
+      if ((len(result['sender']) > 30) or (len(result['recipient']) > 30)):
         return render_template('index.html', alert=True, accolloform=True)
       elif (len(result['task']) > 60):
         return render_template('index.html', alert=True, accolloform=True)

@@ -40,7 +40,7 @@
             <a class="nav-link btn" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
             {% endif %}
             {% if session['username'] %}
-            <a class="nav-link btn btn-danger bg-danger text-white" role="button" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link btn" role="button" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
@@ -115,11 +115,8 @@
           </div>
         </div>
       </div>
-    <div class="row row-margin-05 justify-content-md-center">
-      <h1 class="cover-heading">Accolli.it</h1>
-    </div>
-    <div class="container">
 
+    <div class="container">
       <div class="row">
         <div class="col-lg">
           <div class="panel panel-info">
@@ -128,7 +125,7 @@
               </div>
               <div class="panel-body">
                 <p>Certifica che qualcuno ti si sta accollando!<br>Guarda questo esempio  <a href="static/example.png">di come Erich si acolla a John!</a></p>
-                {% if alert or request.args.get('qr_how_to') == 'true' %}
+                {% if request.args.get('qr_how_to') == 'true' %}
                 <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                   Hai scansionato il QR della carta di Erich e John! Crea anche tu carte di accollo! 
@@ -141,8 +138,15 @@
         <div class="col-lg">
           <main role="main" class="inner cover">
             <div class="row row-margin-05 justify-content-md-center">
+            {% if session['username'] %}
+            <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
+            {% endif %}
+            </div>
+            <div class="row row-margin-05 justify-content-md-center">
               {% if accolloformdashboard %}
-              <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+              <div class="alert alert-primary" role="alert">
+                <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+              </div>
               {% else %}
               <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
               </p>
@@ -156,7 +160,7 @@
             {% if alert or request.args.get('alert') == 'true' %}
             <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 20 mentre l'attività richiesta può contenere 60 caratteri.
+              Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 30 mentre l'attività richiesta può contenere 60 caratteri.
             </div>
             {% endif %}
             {% if user_already_exists %}
@@ -208,8 +212,7 @@
         </div>
       </div>
       <div class="row row-margin-30 justify-content-md-center">
-        <h4>Prova il comodo wallet degli accolli! </h4>
-        <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
+        <h4>Registrati e prova il comodo wallet degli accolli! Ecco come funziona...</h4>
         <div class="col-md-auto">
           <img src="static/wallet.png" class="img-fluid img-rounded zoom" alt="Responsive image">
         </div>
