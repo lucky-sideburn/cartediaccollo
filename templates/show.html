@@ -87,12 +87,10 @@
       <div class="container">
         <div class="row justify-content-md-center">
           <div class="col-lg-8">
-            <!--
             {% if session['username'] %}
             <a class="btn btn-success" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
             <a class="btn btn-warning" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
             {% endif %} 
-            -->       
             <div class="card mb-4 shadow-sm row-margin-02">
               <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
               <div class="card-body">
@@ -130,28 +128,16 @@
                   <div class="row row-margin-05">
                     <a href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{emailbody}}" class="btn btn-primary mb-2" role="button">Invia tramite email!</a>
                   </div>
-                 <!--
-                  <div class="row row-margin-05">
-                    <form action="https://accolli.it/message?id={{request.args.get('id')}}&token={{request.args.get('token')}}" method="POST" class="form-inline">
-                      <div class="form-group">
-                        <div class="input-group mb-2 mr-sm-2">
-                          <input type="email" name="email" class="form-control" id="inlineFormInputGroupUsername2" placeholder="email destinatario">
-                        </div>
-                       <button type="submit" class="btn btn-primary mb-2">Invia tramite e-mail</button>
-                    </form>
-                  </div>
-                -->
                 </div>
               </div>
             </div>
-  <!--
-            <form action="https://accolli.it/message" method="POST">
-              <div class="form-group">
-                <input class="form-control form-control-lg" type="text" placeholder="scrivi qui un aggiornamento">
+            <div class="row row-margin-05">
+              <div class="row row-margin-30 justify-content-md-center">
+                <h4>Registrati e prova il comodo wallet delle carte di accollo!</h4>
+                <div class="col-md-auto">
+                <img src="static/wallet.png" class="img-fluid img-rounded zoom" alt="Responsive image">
               </div>
-              <button type="submit" class="btn btn-primary mb-2">Invia</button>
-            </form>
-  -->
+            </div>
           </div>
         </div>
       </div>
