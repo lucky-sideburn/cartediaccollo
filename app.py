@@ -216,9 +216,9 @@ def dashboard_accolli():
 
   if session['username']:
     accolli = find_accolli_for_dashboard(session['username'])
-    return render_template('dashboard_accolli.html', alert=False, id=session['username'], dashboard_name=session['username'], accolli=accolli) 
+    return render_template('dashboard_accolli.html', alert=False, id=session['username'], dashboard_name=session['username'], accolli=reversed(accolli)) 
   else:
-    return render_template('dashboard_accolli.html', view_form=True, dashboard_name='', accolli = accolli)
+    return render_template('dashboard_accolli.html', view_form=True, dashboard_name='', accolli = reversed(accolli))
 
 @app.route("/dashboard_accolli/create", methods = ['POST', 'GET'])
 def create_dashboard_accolli():
@@ -332,7 +332,11 @@ def cartadiaccollo():
       card_id = create_card_img(str(uuid.uuid1()), request.args.get('dashboard_name'), result['task'], sender, token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
       write_card_mongo(card_id,token, card_url, sender, request.args.get('dashboard_id'), result['task'])
-      return redirect(card_url, code=302)
+
+      if session and (result['recipient'] == session['username'] and request.args.get('dashboard_name') == session['username']):
+        return redirect('/dashboard_accolli', code=302)
+      else:
+        return redirect(card_url, code=302)
 
     else:
       for _input in inputs:
