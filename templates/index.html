@@ -129,7 +129,7 @@
                   Hai scansionato il QR della carta di Erich e John! Crea anche tu carte di accollo! 
                 </div>
                 {% endif %}
-                <img src="static/example.png" class="img-fluid img-rounded zoom" alt="Responsive image">
+                <img src="static/example.png" class="img-fluid img-rounded zoom" alt="Responsive image">                
               {% if session['username'] %}
                 <div class="row row-margin-20 justify-content-md-center">
                   <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
@@ -171,6 +171,7 @@
             </div>
             {% endif %}
             {% if accolloformdashboard %}
+             <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
             <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
               <div class="form-group">
                 <label for="task1">Attività richiesta (Inserisci cosa vuoi chiedere a {{ dashboard['name'] }})</label>
@@ -186,7 +187,7 @@
                 <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
                 <button type="submit" class="btn btn-danger">Crea</button>
               </div>
-            </form>
+            </form>                                         
             {% endif %}
             {% if accolloform %}
             <form action="https://accolli.it/cartadiaccollo" method="POST">
@@ -204,6 +205,7 @@
               </div>
               <button type="submit" class="btn btn-primary">Crea</button>
             </form>
+            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
             {% endif %}
           </main>
         </div>

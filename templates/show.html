@@ -89,6 +89,8 @@
             <a class="btn btn-success" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
             <a class="btn btn-warning" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
             {% endif %} 
+                      <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
+
             <div class="card mb-4 shadow-sm row-margin-02">
               <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
               <div class="card-body">
