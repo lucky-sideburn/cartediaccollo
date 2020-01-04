@@ -22,6 +22,7 @@
     <!-- Custom styles for this template -->
   </head>
   <style>
+    .row-margin-02 { margin-top: 0.2em; }
     .row-margin-05 { margin-top: 0.5em; }
     .row-margin-10 { margin-top: 1.0em; }
     .row-margin-20 { margin-top: 2.0em; }
@@ -86,9 +87,13 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8">
+            <!--
+            {% if session['username'] %}
             <a class="btn btn-success" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
             <a class="btn btn-warning" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
-            <div class="card mb-4 shadow-sm row-margin-10">
+            {% endif %} 
+            -->       
+            <div class="card mb-4 shadow-sm row-margin-02">
               <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
               <div class="card-body">
                 <p class="card-text"><font class="card-text {{text}}">{{card_status_desc}}</font></p>

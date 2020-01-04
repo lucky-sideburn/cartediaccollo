@@ -36,11 +36,11 @@
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="https://accolli.it">Home</a>
             {% if not session['username'] %}
-            <a class="nav-link btn" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
-            <a class="nav-link btn" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
+            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
+            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
             {% endif %}
             {% if session['username'] %}
-            <a class="nav-link btn" role="button" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
           </nav>
@@ -121,7 +121,7 @@
         <div class="col-lg">
           <div class="panel panel-info">
               <div class="panel-heading">
-                <h5 class="panel-title">Cos'è una Carta di Acollo?</h5>
+                <h5 class="panel-title">Cos'è una Carta di Accollo?</h5>
               </div>
               <div class="panel-body">
                 <p>Certifica che qualcuno ti si sta accollando!<br>Guarda questo esempio  <a href="static/example.png">di come Erich si acolla a John!</a></p>
@@ -138,11 +138,6 @@
         <div class="col-lg">
           <main role="main" class="inner cover">
             <div class="row row-margin-05 justify-content-md-center">
-            {% if session['username'] %}
-            <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
-            {% endif %}
-            </div>
-            <div class="row row-margin-05 justify-content-md-center">
               {% if accolloformdashboard %}
               <div class="alert alert-primary" role="alert">
                 <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
@@ -150,11 +145,6 @@
               {% else %}
               <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
               </p>
-              {% if session['username'] %}
-              <p class="lead">
-              {{session['username']}} se hai necessità di gestire più accolli <a href="https://accolli.it/dashboard_accolli">clicca qui</a>
-              </p>
-              {% endif %}
               {% endif %}
             </div>
             {% if alert or request.args.get('alert') == 'true' %}
@@ -208,15 +198,24 @@
               <button type="submit" class="btn btn-primary">Crea</button>
             </form>
             {% endif %}
+            <div class="row row-margin-30 justify-content-md-center">
+            {% if session['username'] %}
+            <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
+            {% endif %}
+            </div>
           </main>
         </div>
       </div>
+
+    {% if accolloform %}
       <div class="row row-margin-30 justify-content-md-center">
-        <h4>Registrati e prova il comodo wallet degli accolli! Ecco come funziona...</h4>
+        <h4>Registrati e prova il comodo wallet degli accolli</h4>
         <div class="col-md-auto">
           <img src="static/wallet.png" class="img-fluid img-rounded zoom" alt="Responsive image">
         </div>
       </div>
+    {% endif %}
+
     </div>
       <footer class="mastfoot mt-auto">
         <div class="inner">

@@ -380,7 +380,12 @@ def register():
             users.insert({'name' : request.form['username'], 'password' : hashpass})
             session['username'] = request.form['username']
             dashboard = generate_dashboard_id_and_token(request.form['username'])
+            token = randomString(20)
+            card_id = create_card_img(str(uuid.uuid1()), request.form['username'], 'inviarti accollo di benvenuto!', 'accolli.it', token)
+            card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
+            write_card_mongo(card_id,token, card_url, 'accolli.it', request.form['username'], 'inviarti accollo di benvenuto!')
             return redirect(url_for('main'))
+
         return render_template('index.html', accolloform=True, user_already_exists=True)
 
     return render_template('register.html')
