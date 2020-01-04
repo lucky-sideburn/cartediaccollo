@@ -329,9 +329,9 @@ def cartadiaccollo():
       else:
         sender = result['sender']
 
-      card_id = create_card_img(str(uuid.uuid1()), request.args.get('dashboard_name'), result['task'], sender, token)
+      card_id = create_card_img(str(uuid.uuid1()), sender, result['task'], request.args.get('dashboard_name'), token)
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      write_card_mongo(card_id,token, card_url, sender, request.args.get('dashboard_id'), result['task'])
+      write_card_mongo(card_id,token, card_url, request.args.get('dashboard_id'), request.args.get('dashboard_id'), result['task'])
 
       if session and (result['recipient'] == session['username'] and request.args.get('dashboard_name') == session['username']):
         return redirect('/dashboard_accolli', code=302)
