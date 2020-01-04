@@ -132,6 +132,11 @@
                 </div>
                 {% endif %}
                 <img src="static/example.png" class="img-fluid img-rounded zoom" alt="Responsive image">
+              {% if session['username'] %}
+                <div class="row row-margin-20 justify-content-md-center">
+                  <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
+                </div>
+              {% endif %}
               </div>
             </div>
           </div>
@@ -140,7 +145,9 @@
             <div class="row row-margin-05 justify-content-md-center">
               {% if accolloformdashboard %}
               <div class="alert alert-primary" role="alert">
-                <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>
+                 <p>Benvenuto nel walllet accolli di <strong>{{ dashboard['name'] }}</strong></p>            
+                <img src="{{ avatars.robohash(dashboard['name']) }}">
+                <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>            
               </div>
               {% else %}
               <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
@@ -173,7 +180,7 @@
               </div>
               <div class="form-group">
                 <label for="sender">Il tuo nome</label>
-                <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Persona che si sta accollando">
+                <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Erich">
                 <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
                 <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
               </div>
@@ -198,11 +205,6 @@
               <button type="submit" class="btn btn-primary">Crea</button>
             </form>
             {% endif %}
-            <div class="row row-margin-30 justify-content-md-center">
-            {% if session['username'] %}
-            <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
-            {% endif %}
-            </div>
           </main>
         </div>
       </div>

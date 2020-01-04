@@ -19,6 +19,7 @@
 /*
  * Header
  */
+
 .masthead {
   margin-bottom: 2rem;
 }
@@ -74,9 +75,6 @@
       <div class="container">
         <div class="row row-margin-05 justify-content-md-center autoaccollo">
           {% if session['username'] %}
-          <p class="lead">
-Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti possano creare per te delle carte di accollo condividi l'indirizzo pubbico del tuo wallet! <a href="https://accolli.it?id={{id}}">https://accolli.it?id={{id}}</a>
-          </p>
           {% if request.args.get('alert') == 'true' %}
           <div class="alert alert-info" role="alert">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -113,11 +111,22 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
       <div class="row justify-content-md-center autoaccollo">
         <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">
           <div class="form-row align-items-center">
-            <div class="alert alert-danger" role="alert">
-              Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a>
+            <div class="col-md-auto">
+              <fieldset class="border p-2">
+              <legend  class="w-auto">{{ session['username'] }}</legend>
+                <img src="{{ avatars.robohash(session['username']) }}">
+              </fieldset>
             </div>
-            <div class="alert alert-info" role="alert">
-            Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo
+            <div class="col-lg">
+              <p class="lead">
+Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti possano creare per te delle carte di accollo condividi l'indirizzo pubbico del tuo wallet! <a href="https://accolli.it?id={{id}}">https://accolli.it?id={{id}}</a>
+              </p>
+              <div class="alert alert-danger" role="alert">
+                Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a>
+              </div>
+              <div class="alert alert-info" role="alert">
+                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo
+              </div>
             </div>
             <div class="col-sm-10 my-1">
               <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">

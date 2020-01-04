@@ -20,11 +20,13 @@ import base64
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from flask_pymongo import PyMongo
 import bcrypt
+from flask_avatars import Avatars
 
 app = Flask(__name__)
 app.config['MONGO_DBNAME'] = 'cartediaccollo'
 app.config['MONGO_URI'] = 'mongodb://' + os.environ['MONGO_HOST'] + ':27017/cartediaccollo'
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
+avatars = Avatars(app)
 
 mongo = PyMongo(app)
 client = MongoClient()
