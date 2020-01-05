@@ -17,10 +17,55 @@
     <link href="static/cover.css?rnd=123" rel="stylesheet">
   </head>  
   <style>
+    .dot-red {
+      height: 20px;
+      width: 20px;
+      background-color: red;
+      border-radius: 20%;
+      display: inline-block;
+    }
+
+    .dot-blue {
+      height: 20px;
+      width: 20px;
+      background-color: blue;
+      border-radius: 20%;
+      display: inline-block;
+    }
+
+    .dot-black {
+      height: 20px;
+      width: 20px;
+      background-color: black;
+      border-radius: 20%;
+      display: inline-block;
+    }
+
+    .dot-green {
+      height: 20px;
+      width: 20px;
+      background-color: green;
+      border-radius: 20%;
+      display: inline-block;
+    }
+
+    .dot-orange {
+      height: 20px;
+      width: 20px;
+      background-color: orange;
+      border-radius: 20%;
+      display: inline-block;
+    }
+
     .row-margin-05 { margin-top: 0.5em; }
     .row-margin-10 { margin-top: 1.0em; }
     .row-margin-20 { margin-top: 2.0em; }
     .row-margin-30 { margin-top: 3.0em; }
+
+    .autoaccollo {
+      margin-left: 2rem;
+    }
+
   </style>
   <script type="text/javascript">
     function closeLoginModal() {
@@ -175,7 +220,7 @@
             <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
               <div class="form-group">
                 <label for="task1">Attività richiesta (Inserisci cosa vuoi chiedere a {{ dashboard['name'] }})</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa (usa <br> per andare a capo)">
               </div>
               <div class="form-group">
                 <label for="sender">Il tuo nome</label>
@@ -187,13 +232,37 @@
                 <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
                 <button type="submit" class="btn btn-danger">Crea</button>
               </div>
+              <div class="autoaccollo form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+                <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+                <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+                <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="red" value="red">
+                <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="green" value="green">
+                <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+              </div>
             </form>                                         
             {% endif %}
             {% if accolloform %}
             <form action="https://accolli.it/cartadiaccollo" method="POST">
               <div class="form-group">
                 <label for="task1">Attività richiesta (inserisci cosa ti è stato richiesto)</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa (usa <br> per andare a capo)">
               </div>
               <div class="form-group">
                 <label for="recipient1">Chi si sta accollando (inserisci chi ti ha richiesto di fare qualcosa)</label>
@@ -204,6 +273,31 @@
                 <input name="sender" type="text" class="form-control" id="recipient3" placeholder="John">
               </div>
               <button type="submit" class="btn btn-primary">Crea</button>
+              
+              <div class="autoaccollo form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+                <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+                <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+                <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="red" value="red">
+                <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="color" id="green" value="green">
+                <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+              </div>
             </form>
             <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
             {% endif %}

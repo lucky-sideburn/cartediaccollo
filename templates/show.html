@@ -86,16 +86,20 @@
         <div class="row justify-content-md-center">
           <div class="col-lg-8">
             {% if session['username'] %}
+              {% if not lightcard %}
             <a class="btn btn-success" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
             <a class="btn btn-warning" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
+              {% endif %}
             {% endif %} 
-                      <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
-
+            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
             <div class="card mb-4 shadow-sm row-margin-02">
               <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
               <div class="card-body">
+                {% if not lightcard %}
                 <p class="card-text"><font class="card-text {{text}}">{{card_status_desc}}</font></p>
+                {% endif %}
                 <div class="container">   
+                  {% if not lightcard %}
                   {% if request.args.get('status') == 'done' %}
                   <div class="row row-margin-05">
                     <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao%2C%0A%0ATi%20comunico%20che%20ho%20terminato%20l%27attivit%C3%A0.%0A%0AL%27accollo%20che%20puoi%20visionare%20al%20seguente%20link%20:%20%0Ahttps://accolli.it/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0A%20%C3%A8%20stato%20completato%21%0A%0ASaluti%2C%0A{{request.args.get('sender')}}%0A%0A" class="btn btn-success mb-2" role="button">Notifica che hai finito!</a>
@@ -105,6 +109,7 @@
                     <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao!%0A%0AHo%20ricevuto%20la%20tua%20Carta%20Di%20Accollo%20e%20volevo%20comunicarti%20che%20ci%20sto%20lavorando%21%0A%0APuoi%20visualizzare%20la%20carta%20al%20seguente%20link:%0Ahttps://accolli.it/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0AA%20presto%21" class="btn btn-warning mb-2" role="button">Notifica che ci stai lavorando!</a>
                   </div>
                   {% endif %}
+                  {% endif %}
                   <div class="row row-margin-10">
                     <div class="btn-group">
                       <button type="button" class="btn btn-secondary">Scegli cosa fare</button>
@@ -112,9 +117,11 @@
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <div class="dropdown-menu">
+                        {% if not lightcard %}
                         <a class="dropdown-item" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
                         <a class="dropdown-item" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
                         <a class="dropdown-item" href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}">Refresh</a>
+                        {% endif %}
                         <a class="dropdown-item" href="https://accolli.it/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo">Download</a>
                         <a class="dropdown-item" href="https://accolli.it">Home Page</a>
                         {% if request.args.get('dashboard_token') %}
@@ -131,6 +138,7 @@
                 </div>
               </div>
             </div>
+            <!--
             <div class="row row-margin-05">
               <div class="row row-margin-30 justify-content-md-center">
                 <h4>Registrati e prova il comodo wallet delle carte di accollo!</h4>
@@ -138,6 +146,7 @@
                 <img src="static/wallet.png" class="img-fluid img-rounded zoom" alt="Responsive image">
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>

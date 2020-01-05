@@ -14,44 +14,107 @@
     <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-/*
- * Header
- */
+    .dot-red {
+      height: 20px;
+      width: 20px;
+      background-color: red;
+      border-radius: 20%;
+      display: inline-block;
+    }
 
-.masthead {
-  margin-bottom: 2rem;
-}
+    .dot-blue {
+      height: 20px;
+      width: 20px;
+      background-color: blue;
+      border-radius: 20%;
+      display: inline-block;
+    }
 
-.masthead-brand {
-  margin-bottom: 0;
-}
+    .dot-black {
+      height: 20px;
+      width: 20px;
+      background-color: black;
+      border-radius: 20%;
+      display: inline-block;
+    }
 
-.nav-masthead .nav-link {
-  padding: .25rem 0;
-  font-weight: 700;
-  color: #808080;
-  background-color: transparent;
-}
+    .dot-green {
+      height: 20px;
+      width: 20px;
+      background-color: green;
+      border-radius: 20%;
+      display: inline-block;
+    }
 
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255, 255, 255, .25);
-}
+    .dot-orange {
+      height: 20px;
+      width: 20px;
+      background-color: orange;
+      border-radius: 20%;
+      display: inline-block;
+    }
 
-.nav-masthead .nav-link + .nav-link {
-  margin-left: 1rem;
-}
+    .black::before {
+        background-color: black;
+    }
 
-.autoaccollo {
-  margin-left: 2rem;
-}
+    .masthead {
+      margin-bottom: 2rem;
+    }
 
-.nav-masthead .active {
-  color: #808080;
-  border-bottom-color: #000;
-}
+    .masthead-brand {
+      margin-bottom: 0;
+    }
+
+    .nav-masthead .nav-link {
+      padding: .25rem 0;
+      font-weight: 700;
+      color: #808080;
+      background-color: transparent;
+    }
+
+    .nav-masthead .nav-link:hover,
+    .nav-masthead .nav-link:focus {
+      border-bottom-color: rgba(255, 255, 255, .25);
+    }
+
+    .nav-masthead .nav-link + .nav-link {
+      margin-left: 1rem;
+    }
+
+    .autoaccollo {
+      margin-left: 2rem;
+    }
+
+    .nav-masthead .active {
+      color: #808080;
+      border-bottom-color: #000;
+    }
     </style>
+  <script type="text/javascript">
+const pickr2 = new Pickr({
+  el: '#color-picker-2',
+  useAsButton: true,
+  default: "123456",
 
+  components: {
+    preview: true,
+    opacity: true,
+    hue: true,
+
+    interaction: {
+      hex: true,
+      rgba: true,
+      hsla: true,
+      hsva: true,
+      cmyk: true,
+      input: true,
+      clear: true,
+      save: true
+    }
+  }
+});
+</script>
   </head>
 
   <body>
@@ -123,17 +186,42 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
                 Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a>
               </div>
               <div class="alert alert-info" role="alert">
-                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo
+                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.
               </div>
             </div>
             <div class="col-sm-10 my-1">
               <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
               <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
               <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
-              <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare">
+              <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
             </div>
             <div class="col-auto my-1">
               <button type="submit" class="btn btn-primary">auto-accollati</button>
+              <button value="true" name="lightcard" type="submit" class="btn btn-primary">crea carta solo con testo e QR</button>
+            </div>
+            <div class="autoaccollo form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+              <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+              <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+              <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="color" id="red" value="red">
+              <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="color" id="green" value="green">
+              <label class="form-check-label" for="green"><span class="dot-green"></span></label>
             </div>
           </div>
         </form>
@@ -152,7 +240,7 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
               {% endif %}
                 <img class="card-img-top" src="https://accolli.it/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
                 <div class="card-body">
-                  <p class="card-text">{{card['task']}}</p>
+                  <p class="card-text">{{card['task']|safe}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}

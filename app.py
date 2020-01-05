@@ -1,5 +1,6 @@
-# coding=utf-8
+# coding=utf-8 
 from PIL import Image as PILImage
+from PIL import ImageEnhance as PILImageEnhance
 from PIL import ImageDraw as PILImageDraw
 from PIL import ImageFont as PILImageFont
 
@@ -121,10 +122,10 @@ def read_card_mongo(uuid,token):
   else:
     return card
 
-def write_card_mongo(card_id,token,card_url,sender,dashboard_id,task):
+def write_card_mongo(card_id,token,card_url,sender,dashboard_id,task,lightcard=False):
   db = client['cartediaccollo']
   collection = db['carte']
-  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id, "task": task}
+  post = {"uuid": card_id, "token": token, "status": "open", "url": card_url, "sender": sender, "dashboard_id": dashboard_id, "task": task, "lightcard": lightcard}
   post_id = collection.insert_one(post).inserted_id
   print(post_id)
 
@@ -135,23 +136,36 @@ def change_card_status(card_id,new_status):
   newvalues = { "$set": { "status": new_status } }
   return collection.update_one(myquery, newvalues)
 
-def create_card_img(card_id,recipient,task,sender,token):
-  img = PILImage.new('RGB', (1024, 800), color = (0, 0, 0))
+def create_card_img(card_id,recipient,task,sender,token,lightcard=False,card_color='black'):
+  img = PILImage.new('RGB', (1024, 800), color = card_color)
   d = PILImageDraw.Draw(img)
-  
-  font = PILImageFont.truetype("Inconsolata-Regular.ttf",28)
-  card_text = "Gentile " + recipient + ",\n\n\nLa presente Carta Di Accollo creata in data " + time.strftime("%d/%m/%Y") + \
-  "\ncertifica che ho preso in considerazione la tua richiesta.\n\n" \
-  "Io sottoscritto/a, " + sender + ", mi impegno ad occuparmi di:\n" + task + ".\n\n" \
-  "Per favore non chiedermi troppo spesso feedback sullo stato\ndi completamento! Ci sto lavorando!\n\n"
-  d.text((100,100), card_text, fill=(255,255,255),font=font)
+  task = task.replace("<br>", "\n")
+
+  fill_color = 'white'
+
+  if card_color == 'orange':
+    fill_color = 'black'
+
+ 
+  if lightcard:
+    font = PILImageFont.truetype("Inconsolata-Regular.ttf",70)
+    card_text = task
+
+  else:
+    font = PILImageFont.truetype("Inconsolata-Regular.ttf",28)
+    card_text = "Gentile " + recipient + ",\n\n\nLa presente Carta Di Accollo creata in data " + time.strftime("%d/%m/%Y") + \
+    "\ncertifica che ho preso in considerazione la tua richiesta.\n\n" \
+    "Io sottoscritto/a, " + sender + ", mi impegno ad occuparmi di:\n" + task + ".\n\n" \
+    "Per favore non chiedermi troppo spesso feedback sullo stato\ndi completamento! Ci sto lavorando!\n\n"
+    
+  d.text((100,100), card_text, fill=fill_color, font=font)
   
   font = PILImageFont.truetype("Inconsolata-Regular.ttf",24)
   details = "ID: " + card_id + "\n" \
   "Token: " + token + "\n" \
   "Scansiona il QR code per accedere alla richiesta" \
   "\n\n\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
-  d.text((100,500), details, fill=(255,255,255),font=font)
+  d.text((100,500), details, fill=fill_color,font=font)
   
   img.save('static/cards/' + card_id + '-text.png')
   
@@ -166,7 +180,9 @@ def create_card_img(card_id,recipient,task,sender,token):
   print(qr_data)
   qr.add_data(qr_data)
   qr.make(fit=True)
-  img = qr.make_image(fill_color="white", back_color="black")
+
+
+  img = qr.make_image(fill_color=fill_color, back_color=card_color)
   img.save('static/cards/' + card_id + '-qr.png')
 
   images = [PILImage.open(x) for x in ['static/cards/' + card_id + '-text.png', 'static/cards/' + card_id + '-qr.png']]
@@ -174,7 +190,7 @@ def create_card_img(card_id,recipient,task,sender,token):
   total_width = sum(widths)
   max_height = max(heights)
 
-  new_im = PILImage.new('RGB', (total_width, max_height))
+  new_im = PILImage.new('RGB', (total_width, max_height), color = card_color)
 
   x_offset = 0
   for im in images:
@@ -182,6 +198,11 @@ def create_card_img(card_id,recipient,task,sender,token):
     x_offset += im.size[0]
 
   new_im.save('static/cards/' + card_id + '.png', format="png")
+  im = PILImage.open('static/cards/' + card_id + '.png')
+  enhancer = PILImageEnhance.Brightness(im)
+  enhanced_im = enhancer.enhance(0.9)
+  enhanced_im.save('static/cards/' + card_id + '.png', format="png")
+
   return card_id
 
 @app.route("/")
@@ -297,13 +318,17 @@ def show():
     else:
       card_stauts_desc = 'uhm... stato accollo indefinito.'
 
-    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text, emailbody = emailbody)
+    if not 'lightcard' in card.keys():
+      card['lightcard'] = False
+
+    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text, emailbody = emailbody, lightcard = card['lightcard'])
   elif card == False:
     return render_template('access_denied.html')
 
 @app.route('/cartadiaccollo',methods = ['POST', 'GET'])
 def cartadiaccollo():
   if request.method == 'POST':
+    print(str(request.form))
     result = request.form
     inputs = ["recipient","sender","task"]
     if request.args.get('to') == 'dashboard':
@@ -329,9 +354,14 @@ def cartadiaccollo():
       else:
         sender = result['sender']
 
-      card_id = create_card_img(str(uuid.uuid1()), sender, result['task'], request.args.get('dashboard_name'), token)
+      if 'lightcard' in result.keys():
+        lightcard = True
+      else:
+        lightcard = False
+
+      card_id = create_card_img(str(uuid.uuid1()), sender, result['task'], request.args.get('dashboard_name'), token, lightcard, result['color'])
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
-      write_card_mongo(card_id,token, card_url, request.args.get('dashboard_id'), request.args.get('dashboard_id'), result['task'])
+      write_card_mongo(card_id,token, card_url, request.args.get('dashboard_id'), request.args.get('dashboard_id'), result['task'], lightcard)
 
       if session and (result['recipient'] == session['username'] and request.args.get('dashboard_name') == session['username']):
         return redirect('/dashboard_accolli', code=302)
@@ -348,7 +378,7 @@ def cartadiaccollo():
         return render_template('index.html', alert=True, accolloform=True)
 
       token = randomString(20)
-      card_id = create_card_img(str(uuid.uuid1()),result['recipient'],result['task'],result['sender'],token)
+      card_id = create_card_img(str(uuid.uuid1()),result['recipient'],result['task'],result['sender'],token, False, result['color'])
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
       print(card_url)
       write_card_mongo(card_id,token,card_url,result['sender'], None, result['task'])
@@ -387,7 +417,7 @@ def register():
             session['username'] = request.form['username']
             dashboard = generate_dashboard_id_and_token(request.form['username'])
             token = randomString(20)
-            card_id = create_card_img(str(uuid.uuid1()), request.form['username'], 'inviarti accollo di benvenuto!', 'accolli.it', token)
+            card_id = create_card_img(str(uuid.uuid1()), request.form['username'], 'inviarti accollo di benvenuto!', 'accolli.it', token, False, 'black')
             card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
             write_card_mongo(card_id,token, card_url, 'accolli.it', request.form['username'], 'inviarti accollo di benvenuto!')
             return redirect(url_for('main'))
