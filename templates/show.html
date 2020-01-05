@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <title>Accolli</title>
 
     <!-- Bootstrap core CSS -->
@@ -88,7 +88,12 @@
       <div class="container">
         <div class="row justify-content-md-center">
           <div class="col-lg-8">
-            {% if session['username'] %}
+            {% if card_status_desc == 'Accollo cancellato!' %}
+            <div class="alert alert-dark" role="alert">
+            Questo accollo è stato cancellato!
+            </div>
+            {% endif %}
+            {% if session['username'] and card_status_desc != 'Accollo cancellato!' %}
               {% if not lightcard %}
             <a class="btn btn-success" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
             <a class="btn btn-warning" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
@@ -102,7 +107,7 @@
                 <p class="card-text"><font class="card-text {{text}}">{{card_status_desc}}</font></p>
                 {% endif %}
                 <div class="container">   
-                  {% if not lightcard %}
+                  {% if not lightcard and card_status_desc != 'Accollo cancellato!' %}
                   {% if request.args.get('status') == 'done' %}
                   <div class="row row-margin-05">
                     <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao%2C%0A%0ATi%20comunico%20che%20ho%20terminato%20l%27attivit%C3%A0.%0A%0AL%27accollo%20che%20puoi%20visionare%20al%20seguente%20link%20:%20%0Ahttps://accolli.it/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0A%20%C3%A8%20stato%20completato%21%0A%0ASaluti%2C%0A{{request.args.get('sender')}}%0A%0A" class="btn btn-success mb-2" role="button">Notifica che hai finito!</a>

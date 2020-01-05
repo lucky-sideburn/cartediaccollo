@@ -232,13 +232,13 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}
                       <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">cancella</a>              
+                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">Cancella</a>              
                       {% elif card['status'] == 'progress' %}
                       <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">cancella</a>  
+                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">Cancella</a>  
                       {% elif card['status'] == 'done' %}
                       <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">cancella</a>  
+                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">Cancella</a>  
                       {% endif %}
                     </div>
                   </div>

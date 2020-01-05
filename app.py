@@ -82,7 +82,8 @@ def find_accolli_for_dashboard(dashboard_id):
   collection = db['carte']
   cards = collection.find({"dashboard_id": dashboard_id}) 
   for doc in cards:
-    accolli.append(doc)
+    if doc['status'] != "deleted":
+      accolli.append(doc)
   return accolli
 
 # check if the dashboard exists and return a dashboard hash
@@ -236,7 +237,9 @@ def delete():
   db = client['cartediaccollo']
   collection = db['carte']
   myquery = { "uuid": request.args.get('id'), "dashboard_id": session['username']}
-  print("Deleted card: " + str(collection.delete_one(myquery)))
+  newvalues = { "$set": { "status": 'deleted' } }
+  #print("Deleted card: " + str(collection.delete_one(myquery)))
+  collection.update_one(myquery, newvalues)
   return redirect('/dashboard_accolli', code=302)
 
 @app.route("/dashboard_accolli")
@@ -328,6 +331,9 @@ def show():
     elif card['status'] == 'done':
       card_status_desc = 'Accollo completato!'
       text = 'text-success'
+    elif card['status'] == 'deleted':
+      card_status_desc = 'Accollo cancellato!'
+      text = 'text-info'
     else:
       card_stauts_desc = 'uhm... stato accollo indefinito.'
 
