@@ -232,6 +232,9 @@ def delete():
 @app.route("/dashboard_accolli")
 def dashboard_accolli():
   
+  if not 'username' in session.keys():
+    return redirect('/', code=302)
+
   authenticated_dashboard = None
   accolli = {}
 
