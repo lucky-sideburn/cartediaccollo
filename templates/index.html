@@ -267,19 +267,28 @@
             </form>                                         
             {% endif %}
             {% if accolloform %}
+              {% if session['username'] %}
+            <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">       
+              {% else %}
             <form action="https://accolli.it/cartadiaccollo" method="POST">
+              {% endif %}
               <div class="form-group">
-                <label for="task1">Attività richiesta (inserisci cosa ti è stato richiesto. Usa &lt;br&gt; per andare a capo)</label>
+                <label for="task1">Inserisci cosa ti è stato richiesto. Usa &lt;br&gt; per andare a capo</label>
                 <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
               </div>
               <div class="form-group">
-                <label for="recipient1">Chi si sta accollando (inserisci chi ti ha richiesto di fare qualcosa)</label>
+                <label for="recipient1">Inserisci chi ti si sta accollando</label>
                 <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="George">
               </div>
               <div class="form-group">
                 <label for="sender1">Il tuo nome</label>
+                {% if session['username'] %}
+                <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
+                <input name="sender" type="text" class="form-control" id="recipient3" placeholder="{{session['username']}}" value="{{session['username']}}" readonly>
+                {% else %}
                 <input name="sender" type="text" class="form-control" id="recipient3" placeholder="John">
-                <div class="row row-margin-05 justify-content-md-center">
+                {% endif %}
+                <div class="row row-margin-20 justify-content-md-center">
                   <button type="submit" class="btn btn-primary btn-md btn-block">Crea carta di accollo</button>
                 </div>
               </div>

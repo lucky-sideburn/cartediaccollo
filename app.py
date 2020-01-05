@@ -372,7 +372,12 @@ def cartadiaccollo():
       else:
         lightcard = False
 
-      card_id = create_card_img(str(uuid.uuid1()), sender, result['task'], request.args.get('dashboard_name'), token, lightcard, result['color'])
+      if 'recipient' in result.keys():
+        recipient = result['recipient']
+      else:
+        recipient = sender
+
+      card_id = create_card_img(str(uuid.uuid1()), recipient, result['task'], request.args.get('dashboard_name'), token, lightcard, result['color'])
       card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
       write_card_mongo(card_id,token, card_url, request.args.get('dashboard_id'), request.args.get('dashboard_id'), result['task'], lightcard)
 
