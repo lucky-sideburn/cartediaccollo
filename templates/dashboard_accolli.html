@@ -84,37 +84,20 @@
 
     .autoaccollo {
       margin-left: 2rem;
+      margin-right: 2rem;
     }
 
+    .autoaccolloblack {
+      margin-left: 2rem;
+    }
     .nav-masthead .active {
       color: #808080;
       border-bottom-color: #000;
     }
+
+    .custombtn { margin-top: 0.5em; }
+
     </style>
-  <script type="text/javascript">
-const pickr2 = new Pickr({
-  el: '#color-picker-2',
-  useAsButton: true,
-  default: "123456",
-
-  components: {
-    preview: true,
-    opacity: true,
-    hue: true,
-
-    interaction: {
-      hex: true,
-      rgba: true,
-      hsla: true,
-      hsva: true,
-      cmyk: true,
-      input: true,
-      clear: true,
-      save: true
-    }
-  }
-});
-</script>
   </head>
 
   <body>
@@ -196,30 +179,30 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
               <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
             </div>
             <div class="col-auto my-1">
-              <button type="submit" class="btn btn-primary">auto-accollati</button>
-              <button value="true" name="lightcard" type="submit" class="btn btn-primary">crea carta solo con testo e QR</button>
+              <button type="submit" class="btn btn-primary custombtn">auto-accollati</button>
+              <button value="true" name="lightcard" type="submit" class="btn btn-primary custombtn">crea carta solo con testo e QR</button>
             </div>
-            <div class="autoaccollo form-check form-check-inline">
+            <div class="autoaccolloblack form-check form-check-inline custombtn">
               <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
               <label class="form-check-label" for="black"><span class="dot-black"></span></label>
             </div>
 
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline custombtn">
               <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
               <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
             </div>
 
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline custombtn">
               <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
               <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
             </div>
 
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline custombtn">
               <input class="form-check-input" type="radio" name="color" id="red" value="red">
               <label class="form-check-label" for="red"><span class="dot-red"></span></label>
             </div>
 
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline custombtn">
               <input class="form-check-input" type="radio" name="color" id="green" value="green">
               <label class="form-check-label" for="green"><span class="dot-green"></span></label>
             </div>

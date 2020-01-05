@@ -58,14 +58,16 @@
     }
 
     .row-margin-05 { margin-top: 0.5em; }
-    .row-margin-10 { margin-top: 1.0em; }
+    .row-margin-10 { margin-top: 1.0em; margin-bottom: 1.0em; }
     .row-margin-20 { margin-top: 2.0em; }
     .row-margin-30 { margin-top: 3.0em; }
 
     .autoaccollo {
       margin-left: 2rem;
     }
-
+    .autoaccollo2 {
+      margin-left: 0.1rem;
+    }
   </style>
   <script type="text/javascript">
     function closeLoginModal() {
@@ -216,11 +218,12 @@
             </div>
             {% endif %}
             {% if accolloformdashboard %}
-             <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
+            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
             <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
+              
               <div class="form-group">
-                <label for="task1">Attività richiesta (Inserisci cosa vuoi chiedere a {{ dashboard['name'] }})</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa (usa <br> per andare a capo)">
+                <label for="task1">Attività richiesta (Inserisci cosa vuoi chiedere a {{ dashboard['name'] }}. Usa &lt;br&gt; per andare a capo)</label>
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
               </div>
               <div class="form-group">
                 <label for="sender">Il tuo nome</label>
@@ -228,41 +231,41 @@
                 <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
                 <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
               </div>
-              <div class="alert alert-danger alert-dismissible" role="alert" id="inputalert">
-                <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
-                <button type="submit" class="btn btn-danger">Crea</button>
-              </div>
-              <div class="autoaccollo form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-                <label class="form-check-label" for="black"><span class="dot-black"></span></label>
-              </div>
+              <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
+              <button type="submit" class="btn btn-danger btn-md btn-block">Crea</button>
+              <div class="row row-margin-10 justify-content-md-center">
+                <div class="autoaccollo form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+                  <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-                <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+                  <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-                <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+                  <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="red" value="red">
-                <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="red" value="red">
+                  <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="green" value="green">
-                <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="green" value="green">
+                  <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+                </div>
               </div>
             </form>                                         
             {% endif %}
             {% if accolloform %}
             <form action="https://accolli.it/cartadiaccollo" method="POST">
               <div class="form-group">
-                <label for="task1">Attività richiesta (inserisci cosa ti è stato richiesto)</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa (usa <br> per andare a capo)">
+                <label for="task1">Attività richiesta (inserisci cosa ti è stato richiesto. Usa &lt;br&gt; per andare a capo)</label>
+                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
               </div>
               <div class="form-group">
                 <label for="recipient1">Chi si sta accollando (inserisci chi ti ha richiesto di fare qualcosa)</label>
@@ -272,31 +275,34 @@
                 <label for="sender1">Il tuo nome</label>
                 <input name="sender" type="text" class="form-control" id="recipient3" placeholder="John">
               </div>
-              <button type="submit" class="btn btn-primary">Crea</button>
-              
-              <div class="autoaccollo form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-                <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+              <div class="row row-margin-05 justify-content-md-center autoaccollo2">
+                <button type="submit" class="btn btn-primary btn-md btn-block">Crea carta di accollo</button>
               </div>
+              <div class="row row-margin-05 justify-content-md-center">
+                <div class="autoaccollo form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+                  <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-                <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+                  <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-                <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+                  <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="red" value="red">
-                <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-              </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="red" value="red">
+                  <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+                </div>
 
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="color" id="green" value="green">
-                <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="color" id="green" value="green">
+                  <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+                </div>
               </div>
             </form>
             <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
