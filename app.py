@@ -161,11 +161,21 @@ def create_card_img(card_id,recipient,task,sender,token,lightcard=False,card_col
   d.text((100,100), card_text, fill=fill_color, font=font)
   
   font = PILImageFont.truetype("Inconsolata-Regular.ttf",24)
-  details = "ID: " + card_id + "\n" \
-  "Token: " + token + "\n" \
-  "Scansiona il QR code per accedere alla richiesta" \
-  "\n\n\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
-  d.text((100,500), details, fill=fill_color,font=font)
+
+  if lightcard:
+    details = "ID: " + card_id + "\n" \
+    "Token: " + token + "\n" \
+    "Creata da: " + sender + "\n" \
+    "Scansiona il QR code per visualizzare questa carta di accollo" \
+    "\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
+    d.text((100,500), details, fill=fill_color,font=font)
+
+  else:
+    details = "ID: " + card_id + "\n" \
+    "Token: " + token + "\n" \
+    "Scansiona il QR code per accedere alla richiesta" \
+    "\n\n\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
+    d.text((100,500), details, fill=fill_color,font=font)
   
   img.save('static/cards/' + card_id + '-text.png')
   
