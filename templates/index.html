@@ -178,6 +178,10 @@
                 <div class="row row-margin-20 justify-content-md-center">
                   <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
                 </div>
+              {% else %}
+                <div class="row row-margin-20 justify-content-md-center">
+                  <a class="btn btn-info text-white btn-md btn-block" data-toggle="modal" data-target="#loginModal" href="/#">Scopri il Wallet Degli Accolli</a>
+                </div>
               {% endif %}
               </div>
             </div>
@@ -300,6 +304,7 @@
                   <input class="form-check-input" type="radio" name="color" id="green" value="green">
                   <label class="form-check-label" for="green"><span class="dot-green"></span></label>
                 </div>
+
               </div>
             </form>
             <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
