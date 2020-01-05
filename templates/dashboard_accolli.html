@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <title>Wallet Carte Di Accollo</title>
 
     <!-- Bootstrap core CSS -->
@@ -114,6 +114,7 @@
             <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
             <a class="nav-link" href="/logout">Logout</a>
             {% endif %}
+            <img class="nav logo-navbar" src="static/logo.png">
           </nav>
         </div>
        </header>
@@ -230,13 +231,13 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
+                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
                       <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">cancella</a>              
                       {% elif card['status'] == 'progress' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
+                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
                       <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">cancella</a>  
                       {% elif card['status'] == 'done' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}&dashboard_token={{token}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
+                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
                       <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">cancella</a>  
                       {% endif %}
                     </div>
