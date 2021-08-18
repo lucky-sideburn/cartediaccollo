@@ -173,14 +173,14 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
                 Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a>
               </div>
               <div class="alert alert-info" role="alert">
-                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.
+                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo.
               </div>
             </div>
             <div class="col-sm-10 my-1">
               <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
               <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
               <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
-              <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
+              <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare.">
             </div>
             <div class="col-auto my-1">
               <button type="submit" class="btn btn-primary custombtn">auto-accollati</button>
@@ -227,7 +227,7 @@ Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti pos
               {% endif %}
                 <img class="card-img-top" src="https://accolli.it/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
                 <div class="card-body">
-                  <p class="card-text">{{card['task']|safe}}</p>
+                  <p class="card-text">{{card['task']}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">    
                       {% if card['status'] == 'open' %}
