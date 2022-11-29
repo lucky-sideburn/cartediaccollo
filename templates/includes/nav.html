@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <div class="container-fluid" style="margin-left: 5%">
+    <a class="navbar-brand nav-link-custom" href="{{ base_url }}" style="color: #ffffff">Accolli.it</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-custom" style="padding-left: 4%">
+          <a class="nav-link nav-link-custom" aria-current="page" href="{{ base_url }}">Home</a>
+          {% if not session['username'] %}
+          <a class="nav-link nav-link-custom" data-bs-toggle="modal" data-bs-target="#loginModal" id="logInButton" href="/#" onmouseover="extendLinkSize(this)">Entra</a>
+          <a class="nav-link nav-link-custom" data-bs-toggle="modal" data-bs-target="#registerModal" href="/#">Registrati</a>
+          {% endif %}
+          {% if session['username'] %}
+          <a class="nav-link nav-link-custom" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
+          <a class="nav-link nav-link-custom" href="/logout">Logout</a>
+          {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

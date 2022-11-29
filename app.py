@@ -3,7 +3,6 @@ from PIL import Image as PILImage
 from PIL import ImageEnhance as PILImageEnhance
 from PIL import ImageDraw as PILImageDraw
 from PIL import ImageFont as PILImageFont
-
 from flask import Flask, render_template, request, send_file, redirect, url_for, Response, session
 from datetime import datetime
 import time
@@ -24,6 +23,7 @@ import bcrypt
 from flask_avatars import Avatars
 
 app = Flask(__name__)
+base_url = os.environ['BASE_URL']
 app.config['MONGO_DBNAME'] = 'cartediaccollo'
 app.config['MONGO_URI'] = 'mongodb://' + os.environ['MONGO_HOST'] + ':27017/cartediaccollo'
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
@@ -31,8 +31,10 @@ avatars = Avatars(app)
 
 mongo = PyMongo(app)
 client = MongoClient()
-client = MongoClient(os.environ['MONGO_HOST'], 27017)
-
+client = MongoClient(os.environ['MONGO_HOST'], 27017, ssl=False)
+print(client)
+db = client['test-database']
+print(db)
 class User(UserMixin):
     def __init__(self , username , password , id , active=True):
         self.id = id
@@ -168,14 +170,14 @@ def create_card_img(card_id,recipient,task,sender,token,lightcard=False,card_col
     "Token: " + token + "\n" \
     "Creata da: " + sender + "\n" \
     "Scansiona il QR code per visualizzare questa carta di accollo" \
-    "\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
+    "\n\n" + "Crea anche tu accolli certificati su " + base_url 
     d.text((100,500), details, fill=fill_color,font=font)
 
   else:
     details = "ID: " + card_id + "\n" \
     "Token: " + token + "\n" \
     "Scansiona il QR code per accedere alla richiesta" \
-    "\n\n\n\n" + "Crea anche tu accolli certificati su https://accolli.it" 
+    "\n\n\n\n" + "Crea anche tu accolli certificati su " + base_url 
     d.text((100,500), details, fill=fill_color,font=font)
   
   img.save('static/cards/' + card_id + '-text.png')
@@ -187,7 +189,7 @@ def create_card_img(card_id,recipient,task,sender,token,lightcard=False,card_col
       border=1,
   )
 
-  qr_data = "https://accolli.it/show?id=" + card_id + "&token=" + token  
+  qr_data = f"{base_url}/show?id=" + card_id + "&token=" + token  
   print(qr_data)
   qr.add_data(qr_data)
   qr.make(fit=True)
@@ -224,13 +226,13 @@ def main():
   if request.args.get('id') != None:
     dashboard = is_valid_dashboard(request.args.get('id'))
     if dashboard != None:
-      return render_template('index.html',accolloformdashboard=True, accolloform=False, dashboard=dashboard)
+      return render_template('index.html', accolloformdashboard=True, accolloform=False, dashboard=dashboard, base_url=base_url)
   else:
-    return render_template('index.html', accolloform=True)
+    return render_template('index.html', accolloform=True, base_url=base_url)
 
 @app.route("/create")
 def create():
-  return render_template('index.html', accolloform=True)
+  return render_template('index.html', accolloform=True, base_url=base_url)
 
 @app.route("/delete")
 def delete():
@@ -253,9 +255,9 @@ def dashboard_accolli():
 
   if session['username']:
     accolli = find_accolli_for_dashboard(session['username'])
-    return render_template('dashboard_accolli.html', alert=False, id=session['username'], dashboard_name=session['username'], accolli=reversed(accolli)) 
+    return render_template('dashboard_accolli.html', alert=False, id=session['username'], dashboard_name=session['username'], accolli=reversed(accolli), base_url=base_url) 
   else:
-    return render_template('dashboard_accolli.html', view_form=True, dashboard_name='', accolli = reversed(accolli))
+    return render_template('dashboard_accolli.html', view_form=True, dashboard_name='', accolli = reversed(accolli), base_url=base_url)
 
 @app.route("/dashboard_accolli/create", methods = ['POST', 'GET'])
 def create_dashboard_accolli():
@@ -268,7 +270,7 @@ def create_dashboard_accolli():
 
 @app.route("/message",methods = ['POST', 'GET'])
 def message():
-  card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token')
+  card_url = f"{base_url}/show?id=" + request.args.get('id') + "&token=" + request.args.get('token')
   result = request.form
   gmail_user = os.environ['ACCOLLI_MAIL_USER']
   gmail_password = os.environ['ACCOLLI_MAIL_PASSWORD']
@@ -299,7 +301,7 @@ Subject: %s
 
 @app.route("/changestatus")
 def changestatus():
-  card_url = "https://accolli.it/show?id=" + request.args.get('id') + "&token=" + request.args.get('token') 
+  card_url = f"{base_url}/show?id=" + request.args.get('id') + "&token=" + request.args.get('token') 
   change_card_status(request.args.get('id'),request.args.get('status'))
   card = read_card_mongo(request.args.get('id'), request.args.get('token'))
   return redirect(card_url + '&status=' + request.args.get('status') + '&sender=' + card['sender'], code=302)
@@ -308,7 +310,7 @@ def changestatus():
 def show():
 
   if request.args.get('id') == "9d32a088-2ba9-11ea-b25c-38f9d358ebff":
-    return redirect('https://accolli.it?qr_how_to=true', code=302)
+    return redirect(f"{base_url}?qr_how_to=true", code=302)
 
   if request.args.get('token') == None:
     return render_template('access_denied.html')
@@ -316,9 +318,9 @@ def show():
   card_id = request.args.get('id')
   token = request.args.get('token')
   card = read_card_mongo(card_id,token)
-  card_img_url = "https://accolli.it/static/cards/" + card_id + ".png" 
+  card_img_url = f"{base_url}/static/cards/" + card_id + ".png" 
   emailbody = 'Gentile Utente,%0A%0AComplimenti hai ricevuto una Carta Di Accollo da ' + card['sender'] +'!%0A%0A' \
-  'Puoi visualizzarla e scaricarla al seguente link:%0Ahttps://accolli.it/show?id=' + card_id + '%26token=' \
+  'Puoi visualizzarla e scaricarla al seguente link:%0A' + base_url + '/show?id=' + card_id + '%26token=' \
   + token + '%0A%0A%0AGrazie,%0AAccolli Operation Team'
   if card:
     print("Card Image URL: " + card_img_url)
@@ -340,7 +342,7 @@ def show():
     if not 'lightcard' in card.keys():
       card['lightcard'] = False
 
-    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text, emailbody = emailbody, lightcard = card['lightcard'])
+    return render_template('show.html',card_img_url = card_img_url, card_status_desc = card_status_desc, text = text, emailbody = emailbody, lightcard = card['lightcard'], base_url=base_url)
   elif card == False:
     return render_template('access_denied.html')
 
@@ -354,7 +356,7 @@ def cartadiaccollo():
       token = randomString(20)
 
       if result['external_sender'] == 'true':
-        return_url = 'https://accolli.it/?id=' + result['recipient'] + '&alert=true'      
+        return_url = base_url + '/?id=' + result['recipient'] + '&alert=true'      
       elif session['username'] == result['recipient']:
         return_url = '/dashboard_accolli?&alert=true'
 
@@ -384,7 +386,7 @@ def cartadiaccollo():
         recipient = sender
 
       card_id = create_card_img(str(uuid.uuid1()), recipient, result['task'], request.args.get('dashboard_name'), token, lightcard, result['color'])
-      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
+      card_url = f"{base_url}/show?id=" + card_id + "&token=" + token 
       write_card_mongo(card_id,token, card_url, request.args.get('dashboard_id'), request.args.get('dashboard_id'), result['task'], lightcard)
 
       if session and (result['recipient'] == session['username'] and request.args.get('dashboard_name') == session['username']):
@@ -395,22 +397,22 @@ def cartadiaccollo():
     else:
       for _input in inputs:
         if (len(result[_input]) < 2):
-          return render_template('index.html', alert=True, accolloform=True)
+          return render_template('index.html', alert=True, accolloform=True, base_url=base_url)
       if ((len(result['sender']) > 30) or (len(result['recipient']) > 30)):
-        return render_template('index.html', alert=True, accolloform=True)
+        return render_template('index.html', alert=True, accolloform=True, base_url=base_url)
       elif (len(result['task']) > 60):
-        return render_template('index.html', alert=True, accolloform=True)
+        return render_template('index.html', alert=True, accolloform=True, base_url=base_url)
 
       token = randomString(20)
       card_id = create_card_img(str(uuid.uuid1()),result['recipient'],result['task'],result['sender'],token, False, result['color'])
-      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
+      card_url = f"{base_url}/show?id=" + card_id + "&token=" + token 
       print(card_url)
       write_card_mongo(card_id,token,card_url,result['sender'], None, result['task'])
       #return send_file('static/cards/' + card_id + '.png', mimetype='image/png', attachment_filename='CartaDiAccollo.png')
-      card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token
+      card_url = f"{base_url}/show?id=" + card_id + "&token=" + token
       return redirect(card_url, code=302)
   else:
-    return redirect('https://accolli.it',code=302) 
+    return redirect(base_url,code=302) 
 
 @app.route('/logout')
 def logout():
@@ -437,16 +439,16 @@ def register():
 
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            users.insert_one({'name' : request.form['username'], 'password' : hashpass})
             session['username'] = request.form['username']
             dashboard = generate_dashboard_id_and_token(request.form['username'])
             token = randomString(20)
             card_id = create_card_img(str(uuid.uuid1()), request.form['username'], 'inviarti accollo di benvenuto!', 'accolli.it', token, False, 'black')
-            card_url = "https://accolli.it/show?id=" + card_id + "&token=" + token 
+            card_url = f"{base_url}/show?id=" + card_id + "&token=" + token 
             write_card_mongo(card_id,token, card_url, 'accolli.it', request.form['username'], 'inviarti accollo di benvenuto!')
             return redirect(url_for('main'))
 
-        return render_template('index.html', accolloform=True, user_already_exists=True)
+        return render_template('index.html', accolloform=True, user_already_exists=True, base_url=base_url)
 
     return render_template('register.html')
 

@@ -1,353 +1,105 @@
-
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
 
-    <title>Accolli</title>
+  {% include './includes/head.html' %}
+  {% include './includes/scripts.html' %}
+  {% include './includes/style.html' %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+  <body>
+    {% include './includes/nav.html' %}
+    {% include './includes/modals.html' %}
 
-    <!-- Custom styles for this template -->
-    <link href="static/cover.css?rnd=123" rel="stylesheet">
-  </head>  
-  <style>
-    .dot-red {
-      height: 20px;
-      width: 20px;
-      background-color: red;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-blue {
-      height: 20px;
-      width: 20px;
-      background-color: blue;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-black {
-      height: 20px;
-      width: 20px;
-      background-color: black;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-green {
-      height: 20px;
-      width: 20px;
-      background-color: green;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-orange {
-      height: 20px;
-      width: 20px;
-      background-color: orange;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .row-margin-05 { margin-top: 0.5em; }
-    .row-margin-10 { margin-top: 1.0em; margin-bottom: 1.0em; }
-    .row-margin-20 { margin-top: 2.0em; }
-    .row-margin-30 { margin-top: 3.0em; }
-
-    .autoaccollo {
-      margin-left: 2rem;
-    }
-  </style>
-  <script type="text/javascript">
-    function closeLoginModal() {
-      $('#loginModal').modal('hide');
-    }
-  </script>
-  <body class="text-center">
-    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-      <header class="masthead mb-auto">
-        <div class="inner">
-          <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link active" href="https://accolli.it">Home</a>
-            {% if not session['username'] %}
-            <a class="nav-link" data-toggle="modal" data-target="#loginModal" href="/#">Log In</a>
-            <a class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign In</a>
-            {% endif %}
-            {% if session['username'] %}
-            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
-            <a class="nav-link" href="/logout">Logout</a>
-            {% endif %}
-            <img class="nav logo-navbar" src="static/logo.png">
-          </nav>
-        </div>
-      </header>
-      <!-- Modal -->
-      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-9 col-md-offset-4">
-                    <form method=POST action="{{ url_for('login') }}">
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" class="form-control" name="username" placeholder="Username">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" name="pass" placeholder="Password">
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                    </form>
-                    <br>
-                    <div>
-                      Don't have an account? <a onclick="closeLoginModal()" class="nav-link" data-toggle="modal" data-target="#registerModal" href="/#">Sign up here</a>.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Modal -->
-      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Sign In</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-9 col-md-offset-4">
-                    <form method=POST action="{{ url_for('register') }}">
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" class="form-control" name="username" placeholder="Username">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" name="pass" placeholder="Password">
-                      </div>
-                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                     </form>
-                     <br>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    <div class="container">
+    <!-- Optional JavaScript; choose one of the two! -->
+    <div class="container" style="margin-top: 10%">
       <div class="row">
-        <div class="col-lg">
-          <div class="panel panel-info">
-              <div class="panel-heading">
-                <h5 class="panel-title">Cos'è una Carta di Accollo?</h5>
+        <div class="col">
+          <div class="row">
+            <h5>Cos'è una Carta di Accollo?</h5>
+            <p>Certifica che qualcuno ti si sta accollando. Guarda questo esempio di come Erich si acolla a John.</a></p>
+
+            {% if invalid_credential %}
+            <div class="alert alert-danger alert-dismissible" role="alert" id="userNotPresent">
+              Utente non presente in accolli.it
+            </div>
+            {% endif %}
+
+            {% if request.args.get('qr_how_to') == 'true' %}
+            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Hai scansionato il QR della carta di Erich e John! Crea anche tu carte di accollo! 
+            </div>
+            {% endif %}
+          </div>
+          <div class="row">
+            <img src="static/example.png" class="img-fluid accolloimg" style="width:50%" alt="Responsive image">
+            {% if session['username'] %}
+            <div class="row row-margin-20 justify-content-md-center" style="margin-top: 2%">
+              <div class="col">
+                <a class="btn btn-danger text-white btn-md " role="button" href="/dashboard_accolli">Apri accolli di {{session['username']}}</a>
               </div>
-              <div class="panel-body">
-                <p>Certifica che qualcuno ti si sta accollando!<br>Guarda questo esempio  <a href="static/example.png">di come Erich si acolla a John!</a></p>
-                {% if request.args.get('qr_how_to') == 'true' %}
-                <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                  Hai scansionato il QR della carta di Erich e John! Crea anche tu carte di accollo! 
-                </div>
-                {% endif %}
-                <img src="static/example.png" class="img-fluid img-rounded zoom" alt="Responsive image">                
-              {% if session['username'] %}
-                <div class="row row-margin-20 justify-content-md-center">
-                  <a class="btn btn-info text-white btn-md btn-block" role="button" href="/dashboard_accolli">Apri wallet di {{session['username']}}</a>
-                </div>
-              {% else %}
-                <div class="row row-margin-20 justify-content-md-center">
-                  <a class="btn btn-info text-white btn-md btn-block" data-toggle="modal" data-target="#loginModal" href="/#">Scopri il Wallet Degli Accolli</a>
-                </div>
-              {% endif %}
-              </div>
+            </div>
+            {% else %}
+            <div class="row row-margin-20 justify-content-md-center" style="margin-top: 2%;">
+              <h5>Registrati o accedi per utilizzare il gestore accolli.</h5>
+            </div>
+            {% endif %}
+          </div>
+        </div>        
+        {% if accolloform %}
+        <div class="col-md-auto">
+          {% if session['username'] %}
+          <form action="{{ base_url }}/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">       
+          {% else %}
+          <form action="{{ base_url }}/cartadiaccollo" method="POST">
+          {% endif %}
+          <!-- <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image"> -->
+
+          <label for="task1">Inserisci cosa ti è stato richiesto. Usa &lt;br&gt; per andare a capo</label>
+          <div class="form-outline w-50">
+            <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
+          </div>
+          
+          <label for="recipient1">Inserisci chi ti si sta accollando</label>
+          <div class="form-outline w-50">
+            <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="George">
+          </div>
+
+          <label for="sender1">Il tuo nome</label>
+          <div class="form-outline w-50">
+            {% if session['username'] %}
+            <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
+            <input name="sender" type="text" class="form-control" id="recipient3" placeholder="{{session['username']}}" value="{{session['username']}}" readonly>
+            {% else %}
+            <input name="sender" type="text" class="form-control" id="recipient3" placeholder="John">
+            {% endif %}
+          </div>
+          <div class="form-outline" style="margin-top: 2%;">
+            <div class="form-outline">
+              <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+              <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+            </div>
+            <div class="form-outline">              
+              <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+              <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+            </div>
+            <div class="form-outline">
+              <input class="form-check-input" type="radio" name="color" id="red" value="red">
+              <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+            </div>
+            <div class="form-outline">
+              <input class="form-check-input" type="radio" name="color" id="green" value="green">
+              <label class="form-check-label" for="green"><span class="dot-green"></span></label>
             </div>
           </div>
-        <div class="col-lg">
-          <main role="main" class="inner cover">
-            <div class="row row-margin-05 justify-content-md-center">
-              {% if accolloformdashboard %}
-              <div class="alert alert-primary" role="alert">
-                 <p>Benvenuto nel wallet accolli di <strong>{{ dashboard['name'] }}</strong></p>            
-                <img src="{{ avatars.robohash(dashboard['name']) }}">
-                <p class="lead">Genera una Carta Di Accollo per <strong>{{ dashboard['name'] }}</strong></p>            
-              </div>
-              {% else %}
-              <p class="lead">Genera la Carta Di Accollo per chi ti si sta accollando! 
-              </p>
-              {% endif %}
-            </div>
-            {% if alert or request.args.get('alert') == 'true' %}
-            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. Il nominativo di chi si sta accollando ed il tuo devono essere massimo di 30 mentre l'attività richiesta può contenere 60 caratteri.
-            </div>
-            {% endif %}
-            {% if user_already_exists %}
-            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              Gentile utente, purtroppo questo username già esiste in accolli.it!
-            </div>
-            {% endif %}
-            {% if invalid_credential %}
-            <div class="alert alert-info  alert-dismissible" role="alert" id="inputalert">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              Nome utente o password errati!
-            </div>
-            {% endif %}
-            {% if accolloformdashboard %}
-            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
-            <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{dashboard['name']}}&dashboard_name={{dashboard['name']}}" method="POST">
-              
-              <div class="form-group">
-                <label for="task1">Attività richiesta (Inserisci cosa vuoi chiedere a {{ dashboard['name'] }}. Usa &lt;br&gt; per andare a capo)</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
-              </div>
-              <div class="form-group">
-                <label for="sender">Il tuo nome</label>
-                <input name="sender" type="text" class="form-control" id="recipient2" placeholder="Erich">
-                <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{dashboard['name']}}">
-                <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
-              </div>
-              <p class="lead">Attenzione! Stai creando una Carta Di Accollo per {{ dashboard['name'] }}</p>
-              <button type="submit" class="btn btn-danger btn-md btn-block">Crea</button>
-              <div class="row row-margin-10 justify-content-md-center">
-                <div class="autoaccollo form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-                  <label class="form-check-label" for="black"><span class="dot-black"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-                  <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-                  <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="red" value="red">
-                  <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="green" value="green">
-                  <label class="form-check-label" for="green"><span class="dot-green"></span></label>
-                </div>
-              </div>
-            </form>                                         
-            {% endif %}
-            {% if accolloform %}
-              {% if session['username'] %}
-            <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">       
-              {% else %}
-            <form action="https://accolli.it/cartadiaccollo" method="POST">
-              {% endif %}
-              <div class="form-group">
-                <label for="task1">Inserisci cosa ti è stato richiesto. Usa &lt;br&gt; per andare a capo</label>
-                <input name="task" type="text" class="form-control" id="task1" placeholder="fare la spesa">
-              </div>
-              <div class="form-group">
-                <label for="recipient1">Inserisci chi ti si sta accollando</label>
-                <input name="recipient" type="text" class="form-control" id="recipient1" placeholder="George">
-              </div>
-              <div class="form-group">
-                <label for="sender1">Il tuo nome</label>
-                {% if session['username'] %}
-                <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="true">
-                <input name="sender" type="text" class="form-control" id="recipient3" placeholder="{{session['username']}}" value="{{session['username']}}" readonly>
-                {% else %}
-                <input name="sender" type="text" class="form-control" id="recipient3" placeholder="John">
-                {% endif %}
-                <div class="row row-margin-20 justify-content-md-center">
-                  <button type="submit" class="btn btn-primary btn-md btn-block">Crea carta di accollo</button>
-                </div>
-              </div>
-              <div class="row row-margin-10 justify-content-md-center">
-                <div class="autoaccollo form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-                  <label class="form-check-label" for="black"><span class="dot-black"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-                  <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-                  <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="red" value="red">
-                  <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="color" id="green" value="green">
-                  <label class="form-check-label" for="green"><span class="dot-green"></span></label>
-                </div>
-
-              </div>
-            </form>
-            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
-            {% endif %}
-          </main>
+          <div class="row form-outline w-50" style="margin-top: 2%">
+            <button type="submit" class="btn btn-danger btn-md btn-block">Crea carta di accollo</button>
+          </div>
         </div>
+          </form>
+        </div>
+        {% endif %}
       </div>
-
-    {% if accolloform %}
-      <div class="row row-margin-30 justify-content-md-center">
-        <h4>Registrati e prova il comodo wallet delle carte di accollo!</h4>
-        <div class="col-md-auto row-margin-10">
-          <img src="static/wallet2.png" class="img-fluid img-rounded zoom" alt="Responsive image">
-        </div>
-      </div>
-    {% endif %}
-
-    </div>
-      <footer class="mastfoot mt-auto">
-        <div class="inner">
-          <p>A <a href="https://twitter.com/luckysideburn">@luckysideburn</a> production.</p>
-        </div>
-      </footer>
-    </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="static/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="static/assets/js/vendor/popper.min.js"></script>
-    <script src="static/dist/js/bootstrap.min.js"></script>
+    </div>    
   </body>
+  {% include './includes/footer.html' %}
 </html>

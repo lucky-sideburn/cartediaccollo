@@ -1,0 +1,73 @@
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+      </div> -->
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 col-md-offset-4">
+              <form method=POST action="{{ url_for('login') }}">
+                <div class="form-group" style="margin-top: 2%;">
+                  <label for="exampleInputEmail1">Nome Utente</label>
+                  <input type="text" class="form-control" name="username" placeholder="Username">
+                </div>
+                <div class="form-group" style="margin-top: 2%;">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" name="pass" placeholder="Password">
+                </div>
+                <div class="form-group" style="margin-top: 4%;">
+                  <button type="submit" class="btn btn-danger btn-block">Entra</button>
+                </div>
+              </form>
+              <div class="row" style="margin-top: 4%;"> 
+                <p>Non sei ancora registrato su accolli.it?</p>
+                <a onclick="closeLoginModal()" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal" href="/#">Registrati qui</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Entra</h5>
+      </div> -->
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 col-md-offset-4">
+              <form method=POST action="{{ url_for('register') }}">
+                <div class="form-group" style="margin-top: 2%">
+                  <label for="exampleInputEmail1">Nome Utente</label>
+                  <input type="text" class="form-control" name="username" placeholder="Username">
+                </div>
+                <div class="form-group" style="margin-top: 2%">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" name="pass" placeholder="Password">
+                </div>
+                <div class="form-group" style="margin-top: 2%">
+                  <button type="submit" class="btn btn-danger btn-block">Registrati</button>
+                </div>
+                </form>
+                <br>
+            </div>
+          </div>
+        </div>
+      </div>
+          <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>

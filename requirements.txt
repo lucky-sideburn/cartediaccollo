@@ -1,8 +1,11 @@
-Flask==1.1.1
-Flask-Admin==1.5.4
-Pillow==8.3.2
-pymongo==3.9.0
-qrcode==6.1
+Flask
+itsdangerous==2.0.1
+werkzeug==2.0.3
+Jinja2==3.0.3
+Flask-Admin
+Pillow
+pymongo
+qrcode
 flask_appbuilder
 flask_pymongo
 flask-avatars

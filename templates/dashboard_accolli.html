@@ -1,263 +1,135 @@
-
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-
-    <title>Wallet Carte Di Accollo</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-    .dot-red {
-      height: 20px;
-      width: 20px;
-      background-color: red;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-blue {
-      height: 20px;
-      width: 20px;
-      background-color: blue;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-black {
-      height: 20px;
-      width: 20px;
-      background-color: black;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-green {
-      height: 20px;
-      width: 20px;
-      background-color: green;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .dot-orange {
-      height: 20px;
-      width: 20px;
-      background-color: orange;
-      border-radius: 20%;
-      display: inline-block;
-    }
-
-    .black::before {
-        background-color: black;
-    }
-
-    .masthead {
-      margin-bottom: 2rem;
-    }
-
-    .masthead-brand {
-      margin-bottom: 0;
-    }
-
-    .nav-masthead .nav-link {
-      padding: .25rem 0;
-      font-weight: 700;
-      color: #808080;
-      background-color: transparent;
-    }
-
-    .nav-masthead .nav-link:hover,
-    .nav-masthead .nav-link:focus {
-      border-bottom-color: rgba(255, 255, 255, .25);
-    }
-
-    .nav-masthead .nav-link + .nav-link {
-      margin-left: 1rem;
-    }
-
-    .autoaccollo {
-      margin-left: 2rem;
-      margin-right: 2rem;
-    }
-
-    .autoaccolloblack {
-      margin-left: 2rem;
-    }
-    .nav-masthead .active {
-      color: #808080;
-      border-bottom-color: #000;
-    }
-
-    .custombtn { margin-top: 0.5em; }
-
-    </style>
-  </head>
-
+  {% include './includes/head.html' %}
+  {% include './includes/scripts.html' %}
+  {% include './includes/style.html' %}
   <body>
-    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-      <header class="masthead mb-auto">
-        <div class="inner">
-          <nav class="nav nav-masthead justify-content-center">
-            {% if session['username'] %}
-            <a class="nav-link active" href="https://accolli.it">Home</a>
-            <a class="nav-link" href="mailto:luckysideburn@gmail.com">Contatti</a>
-            <a class="nav-link" href="/dashboard_accolli">Accolli di {{session['username']}}</a>
-            <a class="nav-link" href="/logout">Logout</a>
-            {% endif %}
-            <img class="nav logo-navbar" src="static/logo.png">
-          </nav>
-        </div>
-       </header>
-    </div>
-    <main role="main">
-      <div class="container">
-        <div class="row row-margin-05 justify-content-md-center autoaccollo">
-          {% if session['username'] %}
-          {% if request.args.get('alert') == 'true' %}
-          <div class="alert alert-info" role="alert">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
-          </div>
-          {% endif %}
-          {% endif %}
-          {% if request.args.get('input_alert') == '1' %}
-          <div class="alert alert-info" role="alert">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
-          </div>
-          {% endif %}
-          {% if view_form %}
-          <p class="lead text-center">
-            Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
-          </p>
-        </div>
-        <div class="row row-margin-05 justify-content-md-center">
-          <form action="https://accolli.it/dashboard_accolli/create" method="POST">
-            <div class="row justify-content-md-center">
-              <div class="col-md-auto">
-                <label class="sr-only" for="inlineFormInput">Nome</label>
-                <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
-              </div>
-              <div class="col-md-auto">
-                <button type="submit" class="btn btn-secondary mb-2">Invia</button>
-              </div>
-            </div>
-          </form>
+    {% include './includes/nav.html' %}
+
+    <div class="container" style="margin-top: 2%;">
+      <div class="row row-margin-05 justify-content-md-center autoaccollo">
+        {% if session['username'] %}
+        {% if request.args.get('alert') == 'true' %}
+        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 2%;">
+          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
         </div>
         {% endif %}
+        {% endif %}
+        {% if request.args.get('input_alert') == '1' %}
+        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 2%;">
+          Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
+        </div>
+        {% endif %}
+        {% if view_form %}
+        <p class="lead text-center">
+          Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
+        </p>
       </div>
-      <div class="row justify-content-md-center autoaccollo">
-        <form action="https://accolli.it/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">
-          <div class="form-row align-items-center">
+      <div class="row row-margin-05 justify-content-md-center">
+        <form action="{{ base_url }}/dashboard_accolli/create" method="POST">
+          <div class="row justify-content-md-center">
             <div class="col-md-auto">
-              <fieldset class="border p-2">
-              <legend  class="w-auto">{{ session['username'] }}</legend>
-                <img src="{{ avatars.robohash(session['username']) }}">
-              </fieldset>
+              <label class="sr-only" for="inlineFormInput">Nome</label>
+              <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
             </div>
-            <div class="col-lg">
-              <p class="lead">
-Benvenuto nel tuo wallet delle carte di accollo! Se vuoi che i tuoi contatti possano creare per te delle carte di accollo condividi l'indirizzo pubblico del tuo wallet! <a href="https://accolli.it?id={{id}}">https://accolli.it?id={{id}}</a>
-              </p>
-              <div class="alert alert-danger" role="alert">
-                Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a>
-              </div>
-              <div class="alert alert-info" role="alert">
-                Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.
-              </div>
-            </div>
-            <div class="col-sm-10 my-1">
-              <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
-              <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
-              <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
-              <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
-            </div>
-            <div class="col-auto my-1">
-              <button type="submit" class="btn btn-primary custombtn">auto-accollati</button>
-              <button value="true" name="lightcard" type="submit" class="btn btn-primary custombtn">crea carta solo con testo e QR</button>
-            </div>
-            <div class="autoaccolloblack form-check form-check-inline custombtn">
-              <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-              <label class="form-check-label" for="black"><span class="dot-black"></span></label>
-            </div>
-
-            <div class="form-check form-check-inline custombtn">
-              <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-              <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-            </div>
-
-            <div class="form-check form-check-inline custombtn">
-              <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-              <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-            </div>
-
-            <div class="form-check form-check-inline custombtn">
-              <input class="form-check-input" type="radio" name="color" id="red" value="red">
-              <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-            </div>
-
-            <div class="form-check form-check-inline custombtn">
-              <input class="form-check-input" type="radio" name="color" id="green" value="green">
-              <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+            <div class="col-md-auto">
+              <button type="submit" class="btn btn-secondary mb-2">Invia</button>
             </div>
           </div>
         </form>
       </div>
-      <div class="album py-5">
-        <div class="container">
-          <div class="row">
-            {% for card in accolli %}
-            <div class="col-md-4">
-              {% if card['status'] == 'open' %}
-              <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
-              {% elif card['status'] == 'progress' %}
-              <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">             
-              {% elif card['status'] == 'done' %}
-              <div class="card text-white bg-success mb-3" style="max-width: 18rem;">  
-              {% endif %}
-                <img class="card-img-top" src="https://accolli.it/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">{{card['task']|safe}}</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">    
-                      {% if card['status'] == 'open' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">Cancella</a>              
-                      {% elif card['status'] == 'progress' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-dark" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-dark" role="button">Cancella</a>  
-                      {% elif card['status'] == 'done' %}
-                      <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm btn-outline-light" role="button">Apri</a>
-                      <a href="https://accolli.it/delete?id={{ card['uuid'] }}" class="btn btn-sm btn-outline-light" role="button">Cancella</a>  
-                      {% endif %}
-                    </div>
+      {% endif %}
+    </div>
+    <div class="row justify-content-md-center autoaccollo">
+      <form action="{{ base_url }}/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">
+        <div class="form-row align-items-center">
+          <div class="col-md-auto">
+            <fieldset class="border p-2">
+            <legend  class="w-auto">{{ session['username'] }}</legend>
+              <img src="{{ avatars.robohash(session['username']) }}">
+            </fieldset>
+          </div>
+          <div class="col-lg">
+            <p class="lead">
+Benvenuto nel tuo gestore delle carte di accollo. Se vuoi che i tuoi contatti possano creare per te delle carte di accollo condividi l'indirizzo pubblico del tuo gestore accolli: <a href="{{ base_url }}?id={{id}}">{{ base_url }}?id={{id}}</a>
+            </p>
+            <p>Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a></p>
+            <p>Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.</p>
+          </div>
+          <div class="col-sm-10 my-1" style="margin-top: 2%">
+            <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
+            <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
+            <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
+            <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
+          </div>
+          <div class="col-auto my-1" style="margin-top: 2%">
+            <button type="submit" class="btn btn-danger custombtn">auto-accollati</button>
+            <button value="true" name="lightcard" type="submit" class="btn btn-danger custombtn">crea carta solo con testo e QR</button>
+          </div>
+
+          <div class="autoaccolloblack form-check form-check-inline custombtn" style="margin-top: 1%">
+            <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
+            <label class="form-check-label" for="black"><span class="dot-black"></span></label>
+          </div>
+
+          <div class="form-check form-check-inline custombtn">
+            <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
+            <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
+          </div>
+
+          <div class="form-check form-check-inline custombtn">
+            <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
+            <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
+          </div>
+
+          <div class="form-check form-check-inline custombtn">
+            <input class="form-check-input" type="radio" name="color" id="red" value="red">
+            <label class="form-check-label" for="red"><span class="dot-red"></span></label>
+          </div>
+
+          <div class="form-check form-check-inline custombtn">
+            <input class="form-check-input" type="radio" name="color" id="green" value="green">
+            <label class="form-check-label" for="green"><span class="dot-green"></span></label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="album py-5">
+      <div class="container">
+        <div class="row">
+          {% for card in accolli %}
+          <div class="col-md-4">
+            {% if card['status'] == 'open' %}
+            <div class="card mb-3" style="max-width: 18rem;">
+            {% elif card['status'] == 'progress' %}
+            <div class="card mb-3" style="max-width: 18rem;">             
+            {% elif card['status'] == 'done' %}
+            <div class="card mb-3" style="max-width: 18rem;">  
+            {% endif %}
+              <img class="card-img-top" src="{{ base_url }}/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
+              <div class="card-body">
+                <p class="card-text">{{card['task']|safe}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">    
+                    {% if card['status'] == 'open' %}
+                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
+                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>              
+                    {% elif card['status'] == 'progress' %}
+                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
+                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>  
+                    {% elif card['status'] == 'done' %}
+                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
+                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>  
+                    {% endif %}
                   </div>
                 </div>
               </div>
             </div>
-            {% endfor %}
           </div>
+          {% endfor %}
         </div>
       </div>
-
-    </main>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="static/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="static/assets/js/vendor/popper.min.js"></script>
-    <script src="static/dist/js/bootstrap.min.js"></script>
-
+    </div>
+  {% include './includes/footer.html' %}
   </body>
 </html>
