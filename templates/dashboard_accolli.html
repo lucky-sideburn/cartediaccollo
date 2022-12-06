@@ -5,18 +5,17 @@
   {% include './includes/style.html' %}
   <body>
     {% include './includes/nav.html' %}
-
-    <div class="container" style="margin-top: 2%;">
+    <div class="container" style="margin-top: 5%;">
       <div class="row row-margin-05 justify-content-md-center autoaccollo">
         {% if session['username'] %}
         {% if request.args.get('alert') == 'true' %}
-        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 2%;">
+        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 5%;">
           Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
         </div>
         {% endif %}
         {% endif %}
         {% if request.args.get('input_alert') == '1' %}
-        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 2%;">
+        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 5%;">
           Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
         </div>
         {% endif %}
@@ -56,18 +55,22 @@ Benvenuto nel tuo gestore delle carte di accollo. Se vuoi che i tuoi contatti po
             <p>Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a></p>
             <p>Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.</p>
           </div>
-          <div class="col-sm-10 my-1" style="margin-top: 2%">
+          <div class="col-sm-10 my-1" style="margin-top: 5%">
             <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
             <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
             <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
             <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
           </div>
-          <div class="col-auto my-1" style="margin-top: 2%">
-            <button type="submit" class="btn btn-danger custombtn">auto-accollati</button>
-            <button value="true" name="lightcard" type="submit" class="btn btn-danger custombtn">crea carta solo con testo e QR</button>
+          <div class="col-auto my-1" style="margin-top: 5%">
+            <div class="col">
+              <button type="submit" class="btn btn-danger custombtn" style="margin-top: 5%;" >auto-accollati</button>
+            </div>
+            <div class="col" style="margin-top: 5%;"> 
+              <button value="true" name="lightcard" type="submit" class="btn btn-danger custombtn">crea carta solo con testo e QR</button>
+            </div>
           </div>
 
-          <div class="autoaccolloblack form-check form-check-inline custombtn" style="margin-top: 1%">
+          <div class="autoaccolloblack form-check form-check-inline custombtn" style="margin-top: 5%">
             <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
             <label class="form-check-label" for="black"><span class="dot-black"></span></label>
           </div>
