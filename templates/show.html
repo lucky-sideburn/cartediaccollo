@@ -1,85 +1,107 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
   {% include './includes/head.html' %}
   {% include './includes/scripts.html' %}
   {% include './includes/style.html' %}
   <body>
-  {% include './includes/nav.html' %}
-  {% include './includes/modals.html' %}
-  <main role="main">
-    <div class="album py-5">
+    {% include './includes/nav.html' %}
+    {% include './includes/modals.html' %}
+
+    <div style="padding: 2.5rem 0 5rem;">
       <div class="container">
-        <div class="row justify-content-md-center">
-          <div class="col-lg-8">
+        <div class="row justify-content-center">
+          <div class="col-lg-7 col-md-9">
+
+            <!-- ── Status banner ──────────────────────────────── -->
             {% if card_status_desc == 'Accollo cancellato!' %}
-            <div class="alert alert-dark" role="alert">
-            Questo accollo è stato cancellato!
+            <div class="alert alert-secondary mb-3" role="alert" style="border-radius:var(--radius);">
+              Questo accollo è stato cancellato.
+            </div>
+            {% elif not lightcard %}
+            <div class="d-flex align-items-center gap-2 mb-3">
+              {% if text == 'text-primary' %}
+              <span class="badge-status badge-open">&#9679; Aperto</span>
+              {% elif text == 'text-danger' %}
+              <span class="badge-status badge-progress">&#9679; In corso</span>
+              {% elif text == 'text-success' %}
+              <span class="badge-status badge-done">&#10003; Completato</span>
+              {% else %}
+              <span class="badge-status badge-deleted">&#9679; Stato sconosciuto</span>
+              {% endif %}
+              <span style="color:var(--text-muted); font-size:.88rem;">{{ card_status_desc }}</span>
             </div>
             {% endif %}
-            {% if session['username'] and card_status_desc != 'Accollo cancellato!' %}
-              <!-- {% if not lightcard %}
-            <a class="btn btn-danger" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
-            <a class="btn btn-danger" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
-              {% endif %} -->
-            {% endif %} 
-            <img src="static/ryu-accollo.gif" class="img-fluid img-rounded zoom" alt="Responsive image">
-            <div class="card mb-4 shadow-sm row-margin-02">
-              <img src="{{card_img_url}}" class="img-fluid" alt="Responsive image">
-              <div class="card-body">
+
+            <!-- ── Card image ──────────────────────────────────── -->
+            <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);">
+              <img src="{{ card_img_url }}" class="img-fluid d-block w-100" alt="Carta di accollo">
+            </div>
+
+            <!-- ── Actions ────────────────────────────────────── -->
+            <div style="margin-top:1.5rem;">
+              <h6 style="font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); font-weight:700; margin-bottom:.75rem;">
+                Azioni disponibili
+              </h6>
+              <div class="action-list">
+
                 {% if not lightcard %}
-                <h5>Messaggio da parte dell'autore di questa card: </h5>
-                <h5 class="card-text"><font class="card-text {{text}}">{{card_status_desc}}</font></h5>
+                <!-- Status actions -->
+                {% if card_status_desc != 'Accollo cancellato!' %}
+                <a class="action-item"
+                   href="{{ url_for('changestatus', id=request.args.get('id'), token=request.args.get('token'), status='done') }}">
+                  <span class="action-icon">&#10003;</span>
+                  Segna come completato
+                </a>
+                <a class="action-item"
+                   href="{{ url_for('changestatus', id=request.args.get('id'), token=request.args.get('token'), status='progress') }}">
+                  <span class="action-icon">&#9654;</span>
+                  Ci sto lavorando
+                </a>
                 {% endif %}
-                <div class="container" style="margin-top: 4%;">   
-                  {% if not lightcard and card_status_desc != 'Accollo cancellato!' %}
-                  {% if request.args.get('status') == 'done' %}
-                  <div class="row row-margin-05">
-                    <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao%2C%0A%0ATi%20comunico%20che%20ho%20terminato%20l%27attivit%C3%A0.%0A%0AL%27accollo%20che%20puoi%20visionare%20al%20seguente%20link%20:%20%0A{{ base_url }}/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0A%20%C3%A8%20stato%20completato%21%0A%0ASaluti%2C%0A{{request.args.get('sender')}}%0A%0A" class="btn btn-success mb-2" role="button">Notifica che hai finito!</a>
-                  </div>
-                  {% elif request.args.get('status') == 'progress' %}
-                  <!-- <div class="row row-margin-05">
-                    <div class="col">
-                      <a href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao!%0A%0AHo%20ricevuto%20la%20tua%20Carta%20Di%20Accollo%20e%20volevo%20comunicarti%20che%20ci%20sto%20lavorando%21%0A%0APuoi%20visualizzare%20la%20carta%20al%20seguente%20link:%0A{{ base_url }}/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0AA%20presto%21" class="btn btn-warning mb-2" role="button">Notifica che ci stai lavorando!</a>
-                    </div>
-                  </div> -->
-                  {% endif %}
-                  {% endif %}
-                  <h5>Possibili azioni: </h5>
-                  <div class="row row-margin-10">
-                    <div>
-                      <div class="dropdown show">
-                        {% if not lightcard %}
-                        <a class="dropdown-item" href="mailto:?subject=Notifica aggiornamento Carta Di Accollo&body=Ciao!%0A%0AHo%20ricevuto%20la%20tua%20Carta%20Di%20Accollo%20e%20volevo%20comunicarti%20che%20ci%20sto%20lavorando%21%0A%0APuoi%20visualizzare%20la%20carta%20al%20seguente%20link:%0A{{ base_url }}/show?id={{request.args.get('id')}}%26token={{request.args.get('token')}}%0A%0AA%20presto%21">Notifica che ci stai lavorando</a>
-                        <a class="dropdown-item" href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{emailbody}}">Invia tramite email</a>
-                        <a class="dropdown-item" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'done') }}">Accollo Completato</a>
-                        <a class="dropdown-item" href="{{ url_for('changestatus', id = request.args.get('id'), token = request.args.get('token'), status = 'progress') }}">Lavora all'accollo</a>
-                        <a class="dropdown-item" href="{{ url_for('show', id = request.args.get('id'), token = request.args.get('token')) }}">Refresh</a>
-                        {% endif %}
-                        <a class="dropdown-item" href="{{ base_url }}/static/cards/{{request.args.get('id')}}.png" download="CartaDiAccollo">Download</a>
-                        <a class="dropdown-item" href="{{ base_url }}">Torna all'home page</a>
-                        {% if request.args.get('dashboard_token') %}
-                        <a class="dropdown-item" href="{{ base_url }}/dashboard_accolli?token={{request.args.get('dashboard_token')}}">Torna indietro</a>
-                        {% endif %}   
-                        <div class="dropdown-divider"></div>
-                      </div>
-                    </div>
-                      <small class="text-muted"></small>
-                  </div>
-                  <!-- <div class="row row-margin-05">
-                    <div class="col">
-                      <a href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{emailbody}}" class="btn btn-primary mb-2" role="button">Invia tramite email</a>
-                    </div>
-                  </div> -->
-                </div>
+
+                <!-- Email actions -->
+                <a class="action-item"
+                   href="mailto:?subject=Notifica ricezione Carta Di Accollo&body={{ emailbody }}">
+                  <span class="action-icon">&#9993;</span>
+                  Invia via email
+                </a>
+                <a class="action-item"
+                   href="mailto:?subject=Aggiornamento Carta Di Accollo&body=Ciao!%0A%0AHo%20ricevuto%20la%20tua%20Carta%20Di%20Accollo%20e%20ci%20sto%20lavorando!%0A%0A{{ base_url }}/show?id={{ request.args.get('id') }}%26token={{ request.args.get('token') }}%0A%0AA%20presto!">
+                  <span class="action-icon">&#128276;</span>
+                  Notifica che ci stai lavorando
+                </a>
+                {% endif %}
+
+                <!-- Download -->
+                <a class="action-item"
+                   href="{{ base_url }}/static/cards/{{ request.args.get('id') }}.png"
+                   download="CartaDiAccollo">
+                  <span class="action-icon">&#11015;</span>
+                  Scarica l'immagine
+                </a>
+
+                <!-- Back to dashboard -->
+                {% if request.args.get('dashboard_id') %}
+                <a class="action-item" href="/dashboard_accolli">
+                  <span class="action-icon">&#8592;</span>
+                  Torna alla dashboard
+                </a>
+                {% endif %}
+
+                <!-- Home -->
+                <a class="action-item" href="{{ base_url }}">
+                  <span class="action-icon">&#127968;</span>
+                  Torna alla home
+                </a>
+
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
-  </main>
-  {% include './includes/footer-not-fixed.html' %}
+
+    {% include './includes/footer-not-fixed.html' %}
   </body>
 </html>
-
-        

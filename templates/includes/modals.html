@@ -1,72 +1,58 @@
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-      </div> -->
-      <div class="modal-body">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-9 col-md-offset-4">
-              <form method=POST action="{{ url_for('login') }}">
-                <div class="form-group" style="margin-top: 2%;">
-                  <label for="exampleInputEmail1">Nome Utente</label>
-                  <input type="text" class="form-control" name="username" placeholder="Username">
-                </div>
-                <div class="form-group" style="margin-top: 2%;">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" name="pass" placeholder="Password">
-                </div>
-                <div class="form-group" style="margin-top: 4%;">
-                  <button type="submit" class="btn btn-danger btn-block">Entra</button>
-                </div>
-              </form>
-              <div class="row" style="margin-top: 4%;"> 
-                <p>Non sei ancora registrato su accolli.it?</p>
-                <a onclick="closeLoginModal()" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal" href="/#">Registrati qui</a>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden;">
+      <div class="modal-header" style="background: var(--red); color: #fff; border: none; padding: 1.25rem 1.5rem;">
+        <h5 class="modal-title" id="loginModalLabel" style="font-weight:700; letter-spacing:-.02em; margin:0;">Entra in Accolli.it</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Chiudi</button>
+      <div class="modal-body" style="padding: 1.75rem 1.5rem;">
+        <form method="POST" action="{{ url_for('login') }}">
+          <div class="mb-3">
+            <label for="loginUsername">Nome Utente</label>
+            <input type="text" class="form-control" id="loginUsername" name="username" placeholder="il tuo username" autocomplete="username">
+          </div>
+          <div class="mb-4">
+            <label for="loginPassword">Password</label>
+            <input type="password" class="form-control" id="loginPassword" name="pass" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-primary-custom w-100" style="text-align:center; padding:.65rem;">Entra</button>
+        </form>
+        <div class="divider"></div>
+        <p style="margin:0; font-size:.88rem; color: var(--text-muted); text-align:center;">
+          Non hai un account?
+          <a onclick="closeLoginModal()" data-bs-toggle="modal" data-bs-target="#registerModal" href="#" style="font-weight:600;">Registrati qui</a>
+        </p>
       </div>
     </div>
   </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Entra</h5>
-      </div> -->
-      <div class="modal-body">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-9 col-md-offset-4">
-              <form method=POST action="{{ url_for('register') }}">
-                <div class="form-group" style="margin-top: 2%">
-                  <label for="exampleInputEmail1">Nome Utente</label>
-                  <input type="text" class="form-control" name="username" placeholder="Username">
-                </div>
-                <div class="form-group" style="margin-top: 2%">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" name="pass" placeholder="Password">
-                </div>
-                <div class="form-group" style="margin-top: 2%">
-                  <button type="submit" class="btn btn-danger btn-block">Registrati</button>
-                </div>
-                </form>
-                <br>
-            </div>
-          </div>
-        </div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden;">
+      <div class="modal-header" style="background: var(--red); color: #fff; border: none; padding: 1.25rem 1.5rem;">
+        <h5 class="modal-title" id="registerModalLabel" style="font-weight:700; letter-spacing:-.02em; margin:0;">Crea il tuo account</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
       </div>
-          <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Chiudi</button>
+      <div class="modal-body" style="padding: 1.75rem 1.5rem;">
+        <form method="POST" action="{{ url_for('register') }}">
+          <div class="mb-3">
+            <label for="registerUsername">Nome Utente</label>
+            <input type="text" class="form-control" id="registerUsername" name="username" placeholder="scegli uno username" autocomplete="username">
+          </div>
+          <div class="mb-4">
+            <label for="registerPassword">Password</label>
+            <input type="password" class="form-control" id="registerPassword" name="pass" placeholder="••••••••" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn-primary-custom w-100" style="text-align:center; padding:.65rem;">Crea account</button>
+        </form>
+        <div class="divider"></div>
+        <p style="margin:0; font-size:.88rem; color: var(--text-muted); text-align:center;">
+          Hai già un account?
+          <a onclick="closeRegisterModal()" data-bs-toggle="modal" data-bs-target="#loginModal" href="#" style="font-weight:600;">Entra qui</a>
+        </p>
       </div>
     </div>
   </div>

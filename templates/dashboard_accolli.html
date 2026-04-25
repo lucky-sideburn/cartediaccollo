@@ -1,138 +1,147 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
   {% include './includes/head.html' %}
   {% include './includes/scripts.html' %}
   {% include './includes/style.html' %}
   <body>
     {% include './includes/nav.html' %}
-    <div class="container" style="margin-top: 5%;">
-      <div class="row row-margin-05 justify-content-md-center autoaccollo">
-        {% if session['username'] %}
-        {% if request.args.get('alert') == 'true' %}
-        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 5%;">
-          Gentile utente i campi da lei inseriti devono essere minimo di 2 caratteri. L'attività richiesta può contenere 60 caratteri.
+
+    <!-- ── Dashboard header ───────────────────────────────────── -->
+    <div class="dash-header">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-auto">
+            <img src="{{ avatars.robohash(session['username']) }}" class="avatar-ring" alt="avatar">
+          </div>
+          <div class="col">
+            <h2 style="font-size:1.4rem; font-weight:700; margin:0;">{{ session['username'] }}</h2>
+            <p style="margin:0; color:var(--text-muted); font-size:.88rem;">
+              Link pubblico:
+              <a href="{{ base_url }}?id={{ id }}" style="font-family:monospace; font-size:.83rem;">
+                {{ base_url }}?id={{ id }}
+              </a>
+              &mdash; condividilo perché altri possano creare accolli per te.
+            </p>
+          </div>
         </div>
-        {% endif %}
-        {% endif %}
-        {% if request.args.get('input_alert') == '1' %}
-        <div class="alert alert-danger card-text" role="alert" style="margin-bottom: 5%;">
-          Gentile utente, il campo da lei inserito deve essere minimo di 2 caratteri e massimo di 30 caratteri.
-        </div>
-        {% endif %}
-        {% if view_form %}
-        <p class="lead text-center">
-          Gentile utente, per favore inserisci il tuo nome per la tua dashboard delle Carte Di Accollo.
-        </p>
       </div>
-      <div class="row row-margin-05 justify-content-md-center">
-        <form action="{{ base_url }}/dashboard_accolli/create" method="POST">
-          <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-              <label class="sr-only" for="inlineFormInput">Nome</label>
-              <input type="text" class="form-control" id="nome_dashboard" name='nome_dashboard' placeholder="Lucilio">
+    </div>
+
+    <div class="container" style="padding-bottom: 4rem;">
+
+      <!-- ── Alerts ──────────────────────────────────────────── -->
+      {% if request.args.get('alert') == 'true' %}
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        I campi devono avere almeno 2 caratteri e l'attività al massimo 60.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endif %}
+      {% if request.args.get('input_alert') == '1' %}
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        Il nome della dashboard deve essere tra 2 e 30 caratteri.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endif %}
+
+      <!-- ── Quick create form ───────────────────────────────── -->
+      <div class="quick-create mt-4">
+        <div class="quick-create-title">
+          <span>&#43;</span> Nuovo accollo rapido
+        </div>
+        <form action="{{ base_url }}/cartadiaccollo?to=dashboard&dashboard_id={{ session['username'] }}&dashboard_name={{ session['username'] }}" method="POST">
+          <input name="sender" type="hidden" value="{{ session['username'] }}">
+          <input name="recipient" type="hidden" value="{{ session['username'] }}">
+          <input name="external_sender" type="hidden" value="false">
+
+          <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+              <label for="task-quick">Cosa vuoi fare?</label>
+              <input type="text" class="form-control" id="task-quick" name="task"
+                     placeholder="es. comprare le batterie per il telecomando…">
+              <small style="color:var(--text-muted); font-size:.78rem;">Usa &lt;br&gt; per andare a capo sulla carta</small>
             </div>
             <div class="col-md-auto">
-              <button type="submit" class="btn btn-secondary mb-2">Invia</button>
+              <label>Colore</label>
+              <div class="swatch-group" style="margin-top:.35rem;">
+                <input type="radio" name="color" id="qc-black" value="black" checked>
+                <label for="qc-black" class="swatch-black" title="Nero"></label>
+                <input type="radio" name="color" id="qc-orange" value="orange">
+                <label for="qc-orange" class="swatch-orange" title="Arancione"></label>
+                <input type="radio" name="color" id="qc-blue" value="blue">
+                <label for="qc-blue" class="swatch-blue" title="Blu"></label>
+                <input type="radio" name="color" id="qc-red" value="red">
+                <label for="qc-red" class="swatch-red" title="Rosso"></label>
+                <input type="radio" name="color" id="qc-green" value="green">
+                <label for="qc-green" class="swatch-green" title="Verde"></label>
+              </div>
+            </div>
+            <div class="col-md-auto d-flex gap-2 flex-wrap">
+              <button type="submit" class="btn-primary-custom" style="padding:.52rem 1.1rem;">
+                Auto-accollati
+              </button>
+              <button value="true" name="lightcard" type="submit"
+                      class="btn-ghost" style="padding:.5rem 1rem; font-size:.85rem;">
+                Solo testo + QR
+              </button>
             </div>
           </div>
         </form>
       </div>
-      {% endif %}
-    </div>
-    <div class="row justify-content-md-center autoaccollo">
-      <form action="{{ base_url }}/cartadiaccollo?to=dashboard&dashboard_id={{session['username']}}&dashboard_name={{session['username']}}" method="POST">
-        <div class="form-row align-items-center">
-          <div class="col-md-auto">
-            <fieldset class="border p-2">
-            <legend  class="w-auto">{{ session['username'] }}</legend>
-              <img src="{{ avatars.robohash(session['username']) }}">
-            </fieldset>
-          </div>
-          <div class="col-lg">
-            <p class="lead">
-Benvenuto nel tuo gestore delle carte di accollo. Se vuoi che i tuoi contatti possano creare per te delle carte di accollo condividi l'indirizzo pubblico del tuo gestore accolli: <a href="{{ base_url }}?id={{id}}">{{ base_url }}?id={{id}}</a>
-            </p>
-            <p>Non visualizzi nuove carte di accollo? <a href="/dashboard_accolli">Clicca qui e ricarica la pagina</a></p>
-            <p>Inserisci qui un'attività che vuoi fare e premi "auto-accollati" per creare una carta di accollo. Usa &lt;br&gt; per andare a capo.</p>
-          </div>
-          <div class="col-sm-10 my-1" style="margin-top: 5%">
-            <input name="sender" type="hidden" class="form-control" id="sender" value="{{session['username']}}">
-            <input name="recipient" type="hidden" class="form-control" id="recipient" value="{{session['username']}}">
-            <input name="external_sender" type="hidden" class="form-control" id="external_sender" value="false">
-            <input type="text" class="form-control" id="task" name="task" placeholder="Inserisci l'attività che vuoi fare. Usa <br> per andare a capo">
-          </div>
-          <div class="col-auto my-1" style="margin-top: 5%">
-            <div class="col">
-              <button type="submit" class="btn btn-danger custombtn" style="margin-top: 5%;" >auto-accollati</button>
+
+      <!-- ── Card grid ───────────────────────────────────────── -->
+      <h3 style="font-size:1rem; font-weight:700; color:var(--text-muted); letter-spacing:.05em; text-transform:uppercase; margin:2rem 0 1rem;">
+        I tuoi accolli
+      </h3>
+
+      <div class="row g-3">
+        {% for card in accolli %}
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100">
+            <div style="height:160px; background:#111; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+              <img src="{{ base_url }}/static/cards/{{ card['uuid'] }}-qr.png"
+                   onerror="this.onerror=null;this.src='{{ base_url }}/static/cards/{{ card['uuid'] }}.png';this.style.objectFit='cover';this.parentElement.style.background='transparent';"
+                   alt="QR carta di accollo" loading="lazy"
+                   style="height:136px; width:136px; object-fit:contain;">
             </div>
-            <div class="col" style="margin-top: 5%;"> 
-              <button value="true" name="lightcard" type="submit" class="btn btn-danger custombtn">crea carta solo con testo e QR</button>
-            </div>
-          </div>
-
-          <div class="autoaccolloblack form-check form-check-inline custombtn" style="margin-top: 5%">
-            <input class="form-check-input" type="radio" name="color" id="black" value="black" checked>
-            <label class="form-check-label" for="black"><span class="dot-black"></span></label>
-          </div>
-
-          <div class="form-check form-check-inline custombtn">
-            <input class="form-check-input" type="radio" name="color" id="orange" value="orange">
-            <label class="form-check-label" for="orange"><span class="dot-orange"></span></label>
-          </div>
-
-          <div class="form-check form-check-inline custombtn">
-            <input class="form-check-input" type="radio" name="color" id="blue" value="blue">
-            <label class="form-check-label" for="blue"><span class="dot-blue"></span></label>
-          </div>
-
-          <div class="form-check form-check-inline custombtn">
-            <input class="form-check-input" type="radio" name="color" id="red" value="red">
-            <label class="form-check-label" for="red"><span class="dot-red"></span></label>
-          </div>
-
-          <div class="form-check form-check-inline custombtn">
-            <input class="form-check-input" type="radio" name="color" id="green" value="green">
-            <label class="form-check-label" for="green"><span class="dot-green"></span></label>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="album py-5">
-      <div class="container">
-        <div class="row">
-          {% for card in accolli %}
-          <div class="col-md-4">
-            {% if card['status'] == 'open' %}
-            <div class="card mb-3" style="max-width: 18rem;">
-            {% elif card['status'] == 'progress' %}
-            <div class="card mb-3" style="max-width: 18rem;">             
-            {% elif card['status'] == 'done' %}
-            <div class="card mb-3" style="max-width: 18rem;">  
-            {% endif %}
-              <img class="card-img-top" src="{{ base_url }}/static/cards/{{ card['uuid'] }}.png" alt="Card image cap">
-              <div class="card-body">
-                <p class="card-text">{{card['task']|safe}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">    
-                    {% if card['status'] == 'open' %}
-                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
-                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>              
-                    {% elif card['status'] == 'progress' %}
-                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
-                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>  
-                    {% elif card['status'] == 'done' %}
-                    <a href="{{ card['url'] }}&dashboard_id={{id}}" class="btn btn-sm" role="button">Apri</a>
-                    <a href="{{ base_url }}/delete?id={{ card['uuid'] }}" class="btn btn-sm" role="button">Cancella</a>  
-                    {% endif %}
-                  </div>
-                </div>
+            <div class="card-body d-flex flex-column" style="padding:1rem;">
+              {% if card['status'] == 'open' %}
+              <span class="badge-status badge-open mb-2">&#9679; Aperto</span>
+              {% elif card['status'] == 'progress' %}
+              <span class="badge-status badge-progress mb-2">&#9679; In corso</span>
+              {% elif card['status'] == 'done' %}
+              <span class="badge-status badge-done mb-2">&#10003; Completato</span>
+              {% endif %}
+              <p class="card-text" style="font-size:.88rem; flex:1; margin-bottom:.75rem; color:var(--text);">
+                {{ card['task'] }}
+              </p>
+              <div class="d-flex gap-2 mt-auto">
+                <a href="{{ card['url'] }}&dashboard_id={{ id }}" class="btn-ghost" style="font-size:.82rem; padding:.35rem .85rem; flex:1; text-align:center;">
+                  Apri
+                </a>
+                <a href="{{ base_url }}/delete?id={{ card['uuid'] }}"
+                   class="btn-ghost btn-ghost-danger" style="font-size:.82rem; padding:.35rem .85rem;"
+                   onclick="return confirm('Vuoi cancellare questo accollo?')">
+                  Cancella
+                </a>
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
+        {% else %}
+        <div class="col-12">
+          <div class="empty-state">
+            <div class="empty-state-icon">&#128196;</div>
+            <h4 style="font-weight:700; margin-bottom:.5rem;">Nessun accollo</h4>
+            <p style="max-width:320px; margin:0 auto;">
+              Crea il tuo primo accollo con il modulo qui sopra, oppure condividi il tuo link pubblico.
+            </p>
+          </div>
+        </div>
+        {% endfor %}
       </div>
+
     </div>
-  {% include './includes/footer-not-fixed.html' %}
+
+    {% include './includes/footer-not-fixed.html' %}
   </body>
 </html>

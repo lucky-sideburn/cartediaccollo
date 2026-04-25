@@ -1,21 +1,31 @@
 version: "3.8"
 services:
   mongodb:
-    image : mongo
+    image: mongo
     container_name: mongodb
     environment:
-    - PUID=1000
-    - PGID=1000
+      - PUID=1000
+      - PGID=1000
     volumes:
-    - $PWD:/data/db
+      - mongo_data:/data/db
     ports:
-    - 27017:27017
+      - 27017:27017
     restart: unless-stopped
+
   accolli:
     image: docker.io/luckysideburn/cartediaccollo:latest
     environment:
-    - MONGO_HOST=mongodb
+      - MONGO_HOST=mongodb
+      - BASE_URL=http://localhost:5000
+      - FLASK_SECRET_KEY=change_me_in_production
+      # - ACCOLLI_MAIL_USER=your_gmail@gmail.com
+      # - ACCOLLI_MAIL_PASSWORD=your_app_password
     ports:
-    - 5000:5000
+      - 5000:5000
     volumes:
-    -  $PWD/cards:/usr/src/app/static/cards
+      - ./cards:/usr/src/app/static/cards
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:

@@ -1,0 +1,38 @@
+# Development MongoDB for Podman
+#
+# Usage:
+#   podman-compose -f docker-compose.podman-dev.yml up -d
+#   podman compose  -f docker-compose.podman-dev.yml up -d   # podman >= 4.4 with compose plugin
+#
+# Then run the app locally:
+#   ./start_dev.sh
+#
+# Stop:
+#   podman-compose -f docker-compose.podman-dev.yml down
+#
+# Notes:
+#   - MongoDB is bound to 127.0.0.1 only — not reachable from other machines
+#   - Volume uses :Z label for SELinux (Fedora/RHEL/CentOS); change to :z for shared volumes
+#   - No auth is configured — dev only, never expose port 27017 externally
+
+services:
+  mongodb:
+    image: docker.io/library/mongo:7
+    container_name: accolli-mongo-dev
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo_dev_data:/data/db:Z
+    environment:
+      MONGO_INITDB_DATABASE: cartediaccollo
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  mongo_dev_data:
+    driver: local

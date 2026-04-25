@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="it">
+  {% include './includes/head.html' %}
+  {% include './includes/scripts.html' %}
+  {% include './includes/style.html' %}
+
+  <style>
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem 1.75rem;
+      transition: box-shadow var(--ease), transform var(--ease);
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow) !important;
+      transform: translateY(-2px);
+    }
+    .kpi-value {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: .3rem;
+    }
+    .kpi-label {
+      font-size: .8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+    }
+    .kpi-icon {
+      font-size: 1.8rem;
+      margin-bottom: .75rem;
+    }
+
+    /* status bar */
+    .status-bar-wrap {
+      background: var(--bg);
+      border-radius: 99px;
+      height: 10px;
+      overflow: hidden;
+      display: flex;
+    }
+    .status-bar-seg {
+      height: 100%;
+      transition: width .6s ease;
+    }
+
+  </style>
+
+  <body>
+    {% include './includes/nav.html' %}
+
+    <!-- ── Page header ────────────────────────────────────────── -->
+    <div style="background: var(--surface); border-bottom: 1px solid var(--border); padding: 2rem 0 1.5rem;">
+      <div class="container">
+        <h1 style="font-size:1.7rem; font-weight:800; margin:0 0 .25rem;">Statistiche</h1>
+        <p style="color:var(--text-muted); margin:0; font-size:.92rem;">
+          Riepilogo globale di tutte le carte di accollo create su Accolli.it
+        </p>
+      </div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 0 5rem;">
+
+      <!-- ── KPI row ─────────────────────────────────────────── -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128196;</div>
+            <div class="kpi-value" style="color: var(--red);">{{ total_cards }}</div>
+            <div class="kpi-label">Carte create</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#10003;</div>
+            <div class="kpi-value" style="color: #059669;">{{ by_status['done'] }}</div>
+            <div class="kpi-label">Completati</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#9679;</div>
+            <div class="kpi-value" style="color: #2563eb;">{{ active }}</div>
+            <div class="kpi-label">Carte attive</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128100;</div>
+            <div class="kpi-value" style="color: var(--text);">{{ total_users }}</div>
+            <div class="kpi-label">Utenti registrati</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Status breakdown + Card types ──────────────────── -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-7">
+          <div class="surface">
+            <h2 style="font-size:1rem; font-weight:700; margin-bottom:1.25rem;">Distribuzione per stato</h2>
+
+            {% set active_for_pct = active if active > 0 else 1 %}
+
+            {% set rows = [
+              ('Aperti',      by_status['open'],     '#2563eb', 'badge-open'),
+              ('In corso',    by_status['progress'], '#d97706', 'badge-progress'),
+              ('Completati',  by_status['done'],     '#059669', 'badge-done'),
+              ('Cancellati',  by_status['deleted'],  '#9ca3af', 'badge-deleted'),
+            ] %}
+
+            <!-- stacked bar -->
+            <div class="status-bar-wrap mb-4">
+              {% for label, count, color, _ in rows %}
+              {% set pct = ((count / (total_cards if total_cards > 0 else 1)) * 100) | round(1) %}
+              <div class="status-bar-seg" style="width:{{ pct }}%; background:{{ color }};"></div>
+              {% endfor %}
+            </div>
+
+            <!-- rows -->
+            {% for label, count, color, badge_class in rows %}
+            <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:.75rem;">
+              <span class="badge-status {{ badge_class }}" style="min-width:90px; justify-content:center;">{{ label }}</span>
+              <div style="flex:1; background:var(--bg); border-radius:99px; height:7px; overflow:hidden;">
+                {% set pct = ((count / (total_cards if total_cards > 0 else 1)) * 100) | round(1) %}
+                <div style="width:{{ pct }}%; height:100%; background:{{ color }}; border-radius:99px;"></div>
+              </div>
+              <span style="font-weight:700; min-width:2.5rem; text-align:right; font-size:.9rem;">{{ count }}</span>
+              <span style="color:var(--text-muted); font-size:.8rem; min-width:3rem; text-align:right;">{{ pct }}%</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="surface h-100">
+            <h2 style="font-size:1rem; font-weight:700; margin-bottom:1.25rem;">Tipo di carta</h2>
+
+            {% set full_cards = active - lightcards if active >= lightcards else 0 %}
+            {% set lc_pct = ((lightcards / (active if active > 0 else 1)) * 100) | round(1) %}
+            {% set fc_pct = (100 - lc_pct) | round(1) %}
+
+            <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+              <div style="flex:1; background:var(--bg); border-radius:var(--radius); padding:1rem; text-align:center;">
+                <div style="font-size:2rem; font-weight:800; color:var(--text);">{{ active - lightcards }}</div>
+                <div style="font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted);">Carta completa</div>
+              </div>
+              <div style="flex:1; background:var(--bg); border-radius:var(--radius); padding:1rem; text-align:center;">
+                <div style="font-size:2rem; font-weight:800; color:var(--red);">{{ lightcards }}</div>
+                <div style="font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted);">Solo testo + QR</div>
+              </div>
+            </div>
+
+            <div class="status-bar-wrap mb-2">
+              <div class="status-bar-seg" style="width:{{ fc_pct }}%; background:var(--text);"></div>
+              <div class="status-bar-seg" style="width:{{ lc_pct }}%; background:var(--red);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:.78rem; color:var(--text-muted);">
+              <span>&#9632; Carta completa {{ fc_pct }}%</span>
+              <span>&#9632; Solo testo {{ lc_pct }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {% include './includes/footer-not-fixed.html' %}
+  </body>
+</html>

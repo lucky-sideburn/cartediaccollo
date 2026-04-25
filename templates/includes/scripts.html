@@ -1,18 +1,14 @@
 <script>
-  $('#loginModal').on('shown.bs.modal', function () {
-    $('#logInButton').trigger('focus')
-  })
-
   $(document).ready(function() {
-    $("#userNotPresent").hide();
-      $("#userNotPresent").fadeTo(3000, 500).slideUp(500, function() {
-        $("#userNotPresent").slideUp(500);
-      });
+    $("#userNotPresent").fadeTo(3000, 500).slideUp(500, function() {
+      $(this).slideUp(500);
+    });
   });
 
   function closeLoginModal() {
-    $(function () {
-      $('#loginModal').modal('toggle');
-    });
+    $('#loginModal').modal('hide');
+  }
+  function closeRegisterModal() {
+    $('#registerModal').modal('hide');
   }
 </script>
